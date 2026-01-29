@@ -99,6 +99,10 @@ The new RLS policies allow:
 - Admins to view and manage all users (using SECURITY DEFINER functions to avoid recursion)
 - All role-based policies now use the safe functions to check permissions
 
+**Security hardening:**
+- Functions use `SET search_path` to prevent search_path injection attacks
+- Functions are restricted to authenticated users only (GRANT/REVOKE statements)
+
 ## Testing
 
 ### Test 1: Existing User Login

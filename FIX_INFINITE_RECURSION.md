@@ -127,6 +127,8 @@ The functions are safe because:
 2. They don't allow arbitrary user queries
 3. They only return boolean values (true/false)
 4. They're read-only (no INSERT/UPDATE/DELETE)
+5. **Protected with `SET search_path`** to prevent search_path injection attacks
+6. **Access restricted** with GRANT/REVOKE to authenticated users only (not PUBLIC)
 
 ### Policies Updated
 The fix updates policies across all tables:

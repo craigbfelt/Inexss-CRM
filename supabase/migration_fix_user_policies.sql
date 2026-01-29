@@ -13,7 +13,11 @@ BEGIN
     WHERE id = auth.uid() AND role = required_role
   );
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp;
+
+-- Grant execute permission to authenticated users only
+GRANT EXECUTE ON FUNCTION public.check_user_role(text) TO authenticated;
+REVOKE EXECUTE ON FUNCTION public.check_user_role(text) FROM PUBLIC;
 
 CREATE OR REPLACE FUNCTION public.check_user_roles(required_roles text[])
 RETURNS boolean AS $$
@@ -23,7 +27,11 @@ BEGIN
     WHERE id = auth.uid() AND role = ANY(required_roles)
   );
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp;
+
+-- Grant execute permission to authenticated users only
+GRANT EXECUTE ON FUNCTION public.check_user_roles(text[]) TO authenticated;
+REVOKE EXECUTE ON FUNCTION public.check_user_roles(text[]) FROM PUBLIC;
 
 -- Drop existing policies to make migration idempotent
 DROP POLICY IF EXISTS "Users can create their own profile" ON public.users;

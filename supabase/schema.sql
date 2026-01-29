@@ -214,7 +214,11 @@ BEGIN
     WHERE id = auth.uid() AND role = required_role
   );
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp;
+
+-- Grant execute permission to authenticated users only
+GRANT EXECUTE ON FUNCTION public.check_user_role(text) TO authenticated;
+REVOKE EXECUTE ON FUNCTION public.check_user_role(text) FROM PUBLIC;
 
 -- Function to check if the current user has one of several roles
 CREATE OR REPLACE FUNCTION public.check_user_roles(required_roles text[])
@@ -225,7 +229,11 @@ BEGIN
     WHERE id = auth.uid() AND role = ANY(required_roles)
   );
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp;
+
+-- Grant execute permission to authenticated users only
+GRANT EXECUTE ON FUNCTION public.check_user_roles(text[]) TO authenticated;
+REVOKE EXECUTE ON FUNCTION public.check_user_roles(text[]) FROM PUBLIC;
 
 -- =====================================================
 -- ROW LEVEL SECURITY (RLS) POLICIES
