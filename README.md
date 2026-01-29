@@ -2,6 +2,14 @@
 
 A comprehensive, visually stunning CRM system designed specifically for Inexx Specialised Solutions - a building specification company working with architects on construction projects.
 
+## ⚠️ Important: RLS Fix for Signup/Login Issues
+
+If you're experiencing "infinite recursion detected in policy for relation 'users'" errors:
+
+**✅ Solution:** Run the migration script in `supabase/migration_fix_user_policies.sql`
+
+📖 **Full Guide:** See [`RLS_FIX_GUIDE.md`](./RLS_FIX_GUIDE.md) for complete instructions and troubleshooting.
+
 ## 🌟 Features
 
 ### For All Users
