@@ -57,23 +57,4 @@ export const signOut = async () => {
   if (error) throw error;
 };
 
-// Helper function to sign up
-export const signUp = async (email, password, userData) => {
-  // Create auth user - the database trigger will automatically create the profile
-  const { data: authData, error: authError } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      data: userData // metadata that will be used by the trigger
-    }
-  });
-  
-  if (authError) throw authError;
-  
-  // Note: User profile in public.users is created automatically by database trigger
-  // See: supabase/migration_fix_signup_rls.sql
-  
-  return authData;
-};
-
 export default supabase;

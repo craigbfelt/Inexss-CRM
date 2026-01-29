@@ -1,22 +1,18 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
-import { LogIn, UserPlus, Sparkles, Building2, Users, TrendingUp } from 'lucide-react';
+import { LogIn, Sparkles, Building2, Users, TrendingUp } from 'lucide-react';
 import ConfigurationError from '../components/ConfigurationError';
 import './Login.css';
 
 const Login = () => {
-  const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
     email: '',
-    password: '',
-    name: '',
-    location: 'JHB'
+    password: ''
   });
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login, register, configError } = useAuth();
+  const { login, configError } = useAuth();
 
   // Show configuration error if present
   if (configError) {
@@ -38,17 +34,12 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    setSuccess('');
     setLoading(true);
 
-    const result = isLogin 
-      ? await login(formData.email, formData.password)
-      : await register(formData);
+    const result = await login(formData.email, formData.password);
 
     if (!result.success) {
       setError(result.error);
-    } else if (result.message) {
-      setSuccess(result.message);
     }
     setLoading(false);
   };
@@ -147,8 +138,8 @@ const Login = () => {
               className="form-header"
               layoutId="form-header"
             >
-              <h2>{isLogin ? 'Welcome Back' : 'Create Account'}</h2>
-              <p>{isLogin ? 'Sign in to your account' : 'Join the Inexss team'}</p>
+              <h2>Welcome Back</h2>
+              <p>Sign in to your account</p>
             </motion.div>
 
             {error && (
@@ -161,44 +152,7 @@ const Login = () => {
               </motion.div>
             )}
 
-            {success && (
-              <motion.div 
-                className="success-message"
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                style={{ 
-                  color: '#10b981', 
-                  background: 'rgba(16, 185, 129, 0.1)', 
-                  padding: '12px', 
-                  borderRadius: '8px',
-                  marginBottom: '20px',
-                  border: '1px solid rgba(16, 185, 129, 0.3)'
-                }}
-              >
-                {success}
-              </motion.div>
-            )}
-
             <form onSubmit={handleSubmit} className="login-form">
-              {!isLogin && (
-                <motion.div 
-                  className="form-group"
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                >
-                  <label>Full Name</label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    className="input"
-                    placeholder="Enter your full name"
-                    required={!isLogin}
-                  />
-                </motion.div>
-              )}
 
               <div className="form-group">
                 <label>Email Address</label>
@@ -226,28 +180,6 @@ const Login = () => {
                 />
               </div>
 
-              {!isLogin && (
-                <motion.div 
-                  className="form-group"
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                >
-                  <label>Location</label>
-                  <select
-                    name="location"
-                    value={formData.location}
-                    onChange={handleChange}
-                    className="input"
-                  >
-                    <option value="JHB">Johannesburg</option>
-                    <option value="Cape Town">Cape Town</option>
-                    <option value="Durban">Durban</option>
-                    <option value="Other">Other</option>
-                  </select>
-                </motion.div>
-              )}
-
               <motion.button
                 type="submit"
                 className="btn btn-primary btn-submit"
@@ -259,31 +191,12 @@ const Login = () => {
                   <div className="spinner"></div>
                 ) : (
                   <>
-                    {isLogin ? <LogIn size={20} /> : <UserPlus size={20} />}
-                    {isLogin ? 'Sign In' : 'Create Account'}
+                    <LogIn size={20} />
+                    Sign In
                   </>
                 )}
               </motion.button>
             </form>
-
-            <div className="form-footer">
-              <p>
-                {isLogin ? "Don't have an account? " : "Already have an account? "}
-                <motion.button
-                  type="button"
-                  className="toggle-button"
-                  onClick={() => {
-                    setIsLogin(!isLogin);
-                    setError('');
-                    setSuccess('');
-                  }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  {isLogin ? 'Sign Up' : 'Sign In'}
-                </motion.button>
-              </p>
-            </div>
           </div>
         </motion.div>
       </div>

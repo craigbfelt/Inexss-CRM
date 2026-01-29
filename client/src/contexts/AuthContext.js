@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { supabase, signIn, signOut, signUp, getUserProfile, isSupabaseConfigured } from '../lib/supabase';
+import { supabase, signIn, signOut, getUserProfile, isSupabaseConfigured } from '../lib/supabase';
 
 const AuthContext = createContext(null);
 
@@ -130,27 +130,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const register = async (userData) => {
-    try {
-      // Sign up the user - this will create profile in both auth.users and public.users
-      await signUp(userData.email, userData.password, {
-        name: userData.name,
-        location: userData.location
-      });
-      
-      return {
-        success: true,
-        message: 'Account created successfully! Please check your email to verify your account.'
-      };
-    } catch (error) {
-      console.error('Registration error:', error);
-      return {
-        success: false,
-        error: error.message || 'Failed to create account'
-      };
-    }
-  };
-
   const logout = async () => {
     try {
       await signOut();
@@ -162,7 +141,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, session, login, register, logout, configError }}>
+    <AuthContext.Provider value={{ user, loading, session, login, logout, configError }}>
       {children}
     </AuthContext.Provider>
   );

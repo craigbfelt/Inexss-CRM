@@ -5,7 +5,6 @@ import ConfigurationError from './components/ConfigurationError';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import NotFound from './pages/NotFound';
-import AuthConfirm from './pages/AuthConfirm';
 import './index.css';
 
 const PrivateRoute = ({ children }) => {
@@ -49,7 +48,6 @@ const App = () => {
       <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route path="/auth/confirm" element={<AuthConfirm />} />
           <Route 
             path="/dashboard/*" 
             element={
