@@ -97,7 +97,7 @@ Vercel should auto-detect the settings from `vercel.json`, but verify:
 
 - **Framework Preset**: Other (or Create React App)
 - **Root Directory**: `./` (leave as root)
-- **Build Command**: `cd client && npm install && npm run build`
+- **Build Command**: `cd client && npm run build`
 - **Output Directory**: `client/build`
 - **Install Command**: `npm install --prefix client`
 
@@ -123,11 +123,13 @@ Before deploying, add your Supabase credentials:
 1. Click **"Deploy"**
 2. Vercel will:
    - Clone your repository
-   - Install dependencies
+   - Install dependencies (using Node.js 20.x as configured in vercel.json)
    - Build the React app
    - Deploy to their CDN
 3. Wait 2-5 minutes for the deployment to complete
 4. Once done, you'll see **"Congratulations!"** with your deployment URL
+
+**Note:** The app uses Supabase packages that require Node.js 20.x or higher. This is automatically configured in `vercel.json`.
 
 ### Step 5: Update Supabase Redirect URLs
 

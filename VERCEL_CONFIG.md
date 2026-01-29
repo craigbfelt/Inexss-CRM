@@ -23,8 +23,9 @@ These are configured in `vercel.json` and will be auto-detected:
 
 **Build Command:**
 ```bash
-cd client && npm install && npm run build
+cd client && npm run build
 ```
+Note: Dependencies are installed separately via the installCommand, so no need to run `npm install` in the build command.
 
 **Output Directory:**
 ```
@@ -128,7 +129,7 @@ After importing, verify these settings:
 2. Check:
    - Framework Preset: Other
    - Root Directory: ./
-   - Node.js Version: 18.x (default is fine)
+   - Node.js Version: 20.x (required for Supabase packages)
 
 3. Go to **Settings** → **Environment Variables**
 4. Verify both `REACT_APP_SUPABASE_URL` and `REACT_APP_SUPABASE_ANON_KEY` are present

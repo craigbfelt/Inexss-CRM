@@ -305,13 +305,6 @@ This project includes comprehensive documentation:
 - **[404_FIX.md](./404_FIX.md)** - Details on the custom 404 page implementation
 - **[VERCEL_FIX.md](./VERCEL_FIX.md)** - Historical context on Vercel deployment fixes
 
-## 📚 Documentation
-
-- **[SUPABASE_MIGRATION.md](./SUPABASE_MIGRATION.md)** - Complete migration guide and deployment instructions
-- **[supabase/README.md](./supabase/README.md)** - Database setup and configuration
-- **[404_FIX.md](./404_FIX.md)** - How the 404 error handling was implemented
-- **[VERCEL_FIX.md](./VERCEL_FIX.md)** - Previous Vercel deployment fixes
-
 ## 🚀 Deployment
 
 This application is designed to run on:
@@ -319,7 +312,7 @@ This application is designed to run on:
 - **Database**: Supabase (free tier available)
 - **Authentication**: Supabase Auth
 
-See [`SUPABASE_MIGRATION.md`](./SUPABASE_MIGRATION.md) for complete deployment guide.
+See [`VERCEL_SETUP.md`](./VERCEL_SETUP.md) for complete deployment guide.
 
 ## 🙏 Acknowledgments
 

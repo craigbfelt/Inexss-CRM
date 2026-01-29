@@ -1,7 +1,14 @@
 {
-  "buildCommand": "cd client && npm install && npm run build",
+  "buildCommand": "cd client && npm run build",
   "outputDirectory": "client/build",
   "installCommand": "npm install --prefix client",
+  "framework": null,
+  "devCommand": "cd client && npm start",
+  "build": {
+    "env": {
+      "NODE_VERSION": "20.x"
+    }
+  },
   "rewrites": [
     {
       "source": "/(.*)",
