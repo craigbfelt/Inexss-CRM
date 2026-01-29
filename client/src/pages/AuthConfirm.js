@@ -12,17 +12,18 @@ const AuthConfirm = () => {
   const [message, setMessage] = useState('Verifying your email...');
 
   useEffect(() => {
+    let timeoutId = null; // Track timeout for cleanup
+
     const handleEmailConfirmation = async () => {
       try {
         // Get token_hash and type from URL parameters
         const tokenHash = searchParams.get('token_hash');
-        // Type could be 'signup' or 'recovery' - we handle both
-        const _type = searchParams.get('type');
+        const type = searchParams.get('type');
 
         if (!tokenHash) {
           setStatus('error');
           setMessage('Invalid verification link. Please try signing up again.');
-          setTimeout(() => navigate('/login'), 3000);
+          timeoutId = setTimeout(() => navigate('/login'), 3000);
           return;
         }
 
@@ -34,40 +35,60 @@ const AuthConfirm = () => {
           console.error('Verification error:', error);
           setStatus('error');
           setMessage('Verification failed. Please try again or contact support.');
-          setTimeout(() => navigate('/login'), 3000);
+          timeoutId = setTimeout(() => navigate('/login'), 3000);
           return;
         }
 
         if (session) {
           // Email verified and session established successfully
           setStatus('success');
-          setMessage('Email verified successfully! Redirecting to dashboard...');
           
-          // Update last login timestamp
-          if (session.user) {
-            await supabase
-              .from('users')
-              .update({ last_login: new Date().toISOString() })
-              .eq('id', session.user.id);
+          // Determine redirect based on verification type
+          const isPasswordRecovery = type === 'recovery';
+          if (isPasswordRecovery) {
+            setMessage('Email verified! Redirecting to password reset...');
+            // For password recovery, redirect to a password reset form
+            // For now, redirect to dashboard (TODO: create password reset page)
+            timeoutId = setTimeout(() => navigate('/dashboard'), 2000);
+          } else {
+            setMessage('Email verified successfully! Redirecting to dashboard...');
+            timeoutId = setTimeout(() => navigate('/dashboard'), 2000);
           }
           
-          // Redirect to dashboard after a brief delay
-          setTimeout(() => navigate('/dashboard'), 2000);
+          // Update last login timestamp (only log errors, don't block)
+          if (session.user) {
+            try {
+              await supabase
+                .from('users')
+                .update({ last_login: new Date().toISOString() })
+                .eq('id', session.user.id);
+            } catch (updateError) {
+              console.error('Failed to update last_login:', updateError);
+              // Continue anyway - this is not critical
+            }
+          }
         } else {
           // No session means verification might have failed
           setStatus('error');
           setMessage('Could not establish session. Please try logging in manually.');
-          setTimeout(() => navigate('/login'), 3000);
+          timeoutId = setTimeout(() => navigate('/login'), 3000);
         }
       } catch (error) {
         console.error('Unexpected error during email confirmation:', error);
         setStatus('error');
         setMessage('An unexpected error occurred. Please try logging in manually.');
-        setTimeout(() => navigate('/login'), 3000);
+        timeoutId = setTimeout(() => navigate('/login'), 3000);
       }
     };
 
     handleEmailConfirmation();
+
+    // Cleanup function to clear timeout if component unmounts
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
   }, [searchParams, navigate]);
 
   return (
@@ -100,25 +121,37 @@ const AuthConfirm = () => {
             {status === 'processing' && (
               <Loader 
                 size={64} 
-                className="mx-auto mb-4" 
                 style={{ 
                   color: '#667eea',
-                  animation: 'spin 1s linear infinite'
+                  animation: 'spin 1s linear infinite',
+                  marginLeft: 'auto',
+                  marginRight: 'auto',
+                  marginBottom: '1rem'
                 }} 
               />
             )}
             {status === 'success' && (
               <CheckCircle 
                 size={64} 
-                className="mx-auto mb-4" 
-                style={{ color: '#10b981' }} 
+                style={{ 
+                  color: '#10b981',
+                  marginLeft: 'auto',
+                  marginRight: 'auto',
+                  marginBottom: '1rem',
+                  display: 'block'
+                }} 
               />
             )}
             {status === 'error' && (
               <XCircle 
                 size={64} 
-                className="mx-auto mb-4" 
-                style={{ color: '#ef4444' }} 
+                style={{ 
+                  color: '#ef4444',
+                  marginLeft: 'auto',
+                  marginRight: 'auto',
+                  marginBottom: '1rem',
+                  display: 'block'
+                }} 
               />
             )}
           </motion.div>
@@ -153,7 +186,7 @@ const AuthConfirm = () => {
         </motion.div>
       </div>
 
-      <style jsx="true">{`
+      <style>{`
         @keyframes spin {
           from {
             transform: rotate(0deg);
@@ -161,13 +194,6 @@ const AuthConfirm = () => {
           to {
             transform: rotate(360deg);
           }
-        }
-        .mx-auto {
-          margin-left: auto;
-          margin-right: auto;
-        }
-        .mb-4 {
-          margin-bottom: 1rem;
         }
       `}</style>
     </div>
