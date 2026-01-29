@@ -12,6 +12,7 @@ const Login = () => {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showResetHelp, setShowResetHelp] = useState(false);
   const { login, configError } = useAuth();
 
   // Show configuration error if present
@@ -197,6 +198,93 @@ const Login = () => {
                 )}
               </motion.button>
             </form>
+
+            <div className="form-footer">
+              <motion.button
+                type="button"
+                className="forgot-password-link"
+                onClick={() => setShowResetHelp(true)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#667eea',
+                  cursor: 'pointer',
+                  fontSize: '0.9rem',
+                  padding: '0.5rem',
+                  textDecoration: 'underline'
+                }}
+              >
+                Forgot Password?
+              </motion.button>
+            </div>
+
+            {/* Password Reset Help Modal */}
+            {showResetHelp && (
+              <motion.div
+                className="modal-overlay"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                onClick={() => setShowResetHelp(false)}
+                style={{
+                  position: 'fixed',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  zIndex: 1000
+                }}
+              >
+                <motion.div
+                  className="modal-content"
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  onClick={(e) => e.stopPropagation()}
+                  style={{
+                    background: 'white',
+                    borderRadius: '12px',
+                    padding: '2rem',
+                    maxWidth: '500px',
+                    margin: '1rem',
+                    boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)'
+                  }}
+                >
+                  <h2 style={{ marginBottom: '1rem', color: '#1f2937' }}>Password Reset</h2>
+                  <p style={{ color: '#6b7280', lineHeight: '1.6', marginBottom: '1.5rem' }}>
+                    To reset your password, please contact your administrator or system manager. 
+                    They can reset your password directly through the Supabase admin panel.
+                  </p>
+                  <p style={{ color: '#6b7280', lineHeight: '1.6', marginBottom: '1.5rem' }}>
+                    <strong>For administrators:</strong> Go to your Supabase dashboard → Authentication → Users, 
+                    find the user, and use the "Reset Password" option.
+                  </p>
+                  <motion.button
+                    onClick={() => setShowResetHelp(false)}
+                    className="btn btn-primary"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    style={{
+                      width: '100%',
+                      padding: '0.75rem',
+                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '8px',
+                      fontSize: '1rem',
+                      fontWeight: '600',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Got it
+                  </motion.button>
+                </motion.div>
+              </motion.div>
+            )}
           </div>
         </motion.div>
       </div>
