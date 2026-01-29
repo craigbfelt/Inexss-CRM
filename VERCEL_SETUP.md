@@ -131,14 +131,16 @@ Before deploying, add your Supabase credentials:
 2. Add these two variables:
 
    **Variable 1:**
-   - **Name**: `REACT_APP_SUPABASE_URL`
+   - **Name**: `NEXT_PUBLIC_SUPABASE_URL`
    - **Value**: Your Supabase Project URL (from Part 1, Step 3)
    - **Environment**: Check all: Production, Preview, Development
 
    **Variable 2:**
-   - **Name**: `REACT_APP_SUPABASE_ANON_KEY`
+   - **Name**: `NEXT_PUBLIC_SUPABASE_ANON_KEY`
    - **Value**: Your Supabase anon public key (from Part 1, Step 3)
    - **Environment**: Check all: Production, Preview, Development
+
+> **Note**: The app uses `NEXT_PUBLIC_*` prefixed environment variables (Vercel/Next.js convention). These are automatically mapped to `REACT_APP_*` during the build process for Create React App compatibility.
 
 ### Step 4: Deploy
 
@@ -212,7 +214,7 @@ Before testing your deployment, verify these critical configurations are correct
   - Check: Reset Password, Confirm signup, Magic Link templates
 - [ ] **Environment Variables** are set in Vercel
   - Location: Vercel → Project → Settings → Environment Variables
-  - Required: `REACT_APP_SUPABASE_URL` and `REACT_APP_SUPABASE_ANON_KEY`
+  - Required: `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - [ ] **Admin User** exists in both `auth.users` and `public.users` tables
   - Location: Supabase → Authentication → Users & Table Editor → users
 
@@ -250,7 +252,7 @@ Before testing your deployment, verify these critical configurations are correct
 
 **Solutions:**
 - Go to Vercel dashboard → Your Project → Settings → Environment Variables
-- Verify both `REACT_APP_SUPABASE_URL` and `REACT_APP_SUPABASE_ANON_KEY` are set
+- Verify both `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` are set
 - Make sure they're enabled for all environments (Production, Preview, Development)
 - Redeploy the project: Deployments → Three dots → Redeploy
 
@@ -296,7 +298,7 @@ Before testing your deployment, verify these critical configurations are correct
 **Solutions:**
 - **Double-check environment variables on Vercel**:
   - Go to Vercel → Your Project → Settings → Environment Variables
-  - Verify `REACT_APP_SUPABASE_URL` and `REACT_APP_SUPABASE_ANON_KEY` are correct
+  - Verify `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` are correct
   - Make sure they match your Supabase project credentials
 - **Redeploy after changing environment variables**:
   - Go to Vercel → Deployments → Latest → Three dots → **"Redeploy"**
@@ -332,9 +334,11 @@ To run the app locally:
 
 2. Create `client/.env` file:
    ```env
-   REACT_APP_SUPABASE_URL=https://your-project.supabase.co
-   REACT_APP_SUPABASE_ANON_KEY=your-anon-key-here
+   NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
    ```
+
+   > **Note**: For local development, you can also use `REACT_APP_*` prefixed variables if preferred.
 
 3. Install dependencies and start:
    ```bash
@@ -374,8 +378,10 @@ To manually trigger a redeploy:
 
 | Variable | Description | Example |
 |----------|-------------|---------|
-| `REACT_APP_SUPABASE_URL` | Your Supabase project URL | `https://xxxxx.supabase.co` |
-| `REACT_APP_SUPABASE_ANON_KEY` | Supabase anonymous/public key | `eyJhbGc...` (long string) |
+| `NEXT_PUBLIC_SUPABASE_URL` | Your Supabase project URL | `https://xxxxx.supabase.co` |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anonymous/public key | `eyJhbGc...` (long string) |
+
+> **Note**: The app automatically maps `NEXT_PUBLIC_*` variables to `REACT_APP_*` during the build process for Create React App compatibility. You can use either prefix, but `NEXT_PUBLIC_*` is recommended for Vercel deployments.
 
 ## Security Notes
 

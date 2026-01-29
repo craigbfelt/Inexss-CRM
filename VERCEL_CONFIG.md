@@ -48,7 +48,7 @@ Add these in: **Settings** → **Environment Variables**
 
 ### Variable 1: Supabase URL
 
-- **Key:** `REACT_APP_SUPABASE_URL`
+- **Key:** `NEXT_PUBLIC_SUPABASE_URL`
 - **Value:** Your Supabase Project URL
   - Example: `https://abcdefghijk.supabase.co`
   - Find it: Supabase Dashboard → Settings → API → Project URL
@@ -59,7 +59,7 @@ Add these in: **Settings** → **Environment Variables**
 
 ### Variable 2: Supabase Anon Key
 
-- **Key:** `REACT_APP_SUPABASE_ANON_KEY`
+- **Key:** `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - **Value:** Your Supabase anon/public API key
   - Example: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...` (long string)
   - Find it: Supabase Dashboard → Settings → API → Project API keys → `anon` `public`
@@ -68,6 +68,8 @@ Add these in: **Settings** → **Environment Variables**
   - ✅ Production
   - ✅ Preview
   - ✅ Development
+
+> **Note**: The app automatically maps `NEXT_PUBLIC_*` variables to `REACT_APP_*` during the build process.
 
 ## Git Integration
 
@@ -132,7 +134,7 @@ After importing, verify these settings:
    - Node.js Version: 20.x (required for Supabase packages)
 
 3. Go to **Settings** → **Environment Variables**
-4. Verify both `REACT_APP_SUPABASE_URL` and `REACT_APP_SUPABASE_ANON_KEY` are present
+4. Verify both `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` are present
 
 ### Test Build
 
@@ -146,9 +148,9 @@ After importing, verify these settings:
 ### Issue: "Missing environment variables"
 
 **Solution:**
-- Ensure both `REACT_APP_SUPABASE_URL` and `REACT_APP_SUPABASE_ANON_KEY` are set
+- Ensure both `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` are set
 - Check they're enabled for the correct environment (Production, Preview, or Development)
-- Variable names must start with `REACT_APP_` for Create React App
+- The app automatically maps these to `REACT_APP_*` for Create React App compatibility
 - After adding variables, redeploy the project
 
 ### Issue: "Build failed"

@@ -71,9 +71,11 @@ http://localhost:3000/**  (optional - for local development)
 
 Required variables:
 ```
-REACT_APP_SUPABASE_URL = https://xxxxx.supabase.co
-REACT_APP_SUPABASE_ANON_KEY = eyJhbGc...
+NEXT_PUBLIC_SUPABASE_URL = https://xxxxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY = eyJhbGc...
 ```
+
+> **Note**: For backward compatibility, `REACT_APP_*` prefixed variables are also supported.
 
 **Important:**
 - These must be set for all environments (Production, Preview, Development)
@@ -140,8 +142,8 @@ Use this checklist to verify everything is configured correctly:
 - [ ] No email templates contain hardcoded localhost URLs
 
 **Vercel - Environment Variables:**
-- [ ] `REACT_APP_SUPABASE_URL` is set
-- [ ] `REACT_APP_SUPABASE_ANON_KEY` is set
+- [ ] `NEXT_PUBLIC_SUPABASE_URL` is set
+- [ ] `NEXT_PUBLIC_SUPABASE_ANON_KEY` is set
 - [ ] Both variables are enabled for all environments
 - [ ] Redeployed after setting variables
 
