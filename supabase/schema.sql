@@ -288,16 +288,24 @@ AS $$
 BEGIN
   -- Insert a new user profile into public.users
   -- Use INSERT ... ON CONFLICT to handle race conditions
-  INSERT INTO public.users (id, email, name, role, location, is_active)
-  VALUES (
-    NEW.id,
-    NEW.email,
-    COALESCE(NEW.raw_user_meta_data->>'name', split_part(NEW.email, '@', 1)),
-    COALESCE(NEW.raw_user_meta_data->>'role', 'staff'),
-    COALESCE(NEW.raw_user_meta_data->>'location', 'Other'),
-    true
-  )
-  ON CONFLICT (id) DO NOTHING;  -- Don't update if already exists
+  -- Wrapped in exception handler to prevent signup failure if profile creation fails
+  BEGIN
+    INSERT INTO public.users (id, email, name, role, location, is_active)
+    VALUES (
+      NEW.id,
+      NEW.email,
+      COALESCE(NEW.raw_user_meta_data->>'name', split_part(NEW.email, '@', 1)),
+      COALESCE(NEW.raw_user_meta_data->>'role', 'staff'),
+      COALESCE(NEW.raw_user_meta_data->>'location', 'Other'),
+      true
+    )
+    ON CONFLICT (id) DO NOTHING;  -- Don't update if already exists
+  EXCEPTION
+    WHEN OTHERS THEN
+      -- Log the error but don't block signup
+      -- The application can auto-create the profile later if needed
+      RAISE WARNING 'Failed to create user profile for %: %', NEW.email, SQLERRM;
+  END;
   
   RETURN NEW;
 END;

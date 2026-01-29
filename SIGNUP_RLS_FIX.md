@@ -129,9 +129,11 @@ Expected output:
 ```
 trigger_name          | on_auth_user_created
 event_manipulation    | INSERT
-event_object_table    | users
+event_object_table    | users (in auth schema)
 action_statement      | EXECUTE FUNCTION public.handle_new_user()
 ```
+
+Note: The event_object_table shows "users" which refers to the `auth.users` table, not the `public.users` table.
 
 ## Benefits of This Approach
 
