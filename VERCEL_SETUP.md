@@ -18,6 +18,8 @@ This guide will help you deploy the Inexss CRM application to Vercel with Supaba
 
 For detailed instructions, see [Step 5](#step-5-update-supabase-redirect-urls--critical) and [Step 6](#step-6-configure-email-templates-for-password-reset) below.
 
+**📖 Quick Reference:** See [AUTHENTICATION_SETUP.md](./AUTHENTICATION_SETUP.md) for a focused authentication configuration checklist.
+
 ---
 
 ## Prerequisites
@@ -422,6 +424,7 @@ If you encounter issues:
 
 ## Additional Resources
 
+- [AUTHENTICATION_SETUP.md](./AUTHENTICATION_SETUP.md) - Quick reference for authentication configuration
 - [SUPABASE_MIGRATION.md](./SUPABASE_MIGRATION.md) - Detailed migration guide
 - [DEPLOYMENT.md](./DEPLOYMENT.md) - General deployment documentation
 - [README.md](./README.md) - Project overview
