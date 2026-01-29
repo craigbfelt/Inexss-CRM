@@ -230,11 +230,7 @@ CREATE POLICY "Users can create their own profile" ON public.users
 
 CREATE POLICY "Users can update their own profile" ON public.users
   FOR UPDATE USING (auth.uid() = id)
-  WITH CHECK (
-    auth.uid() = id 
-    AND role = OLD.role
-    AND is_active = OLD.is_active
-  );
+  WITH CHECK (auth.uid() = id);
 
 -- Brands table policies
 -- All authenticated users can manage brands (application handles role restrictions)
