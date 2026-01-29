@@ -71,23 +71,25 @@ A comprehensive, visually stunning CRM system designed specifically for Inexx Sp
 
 **This application is designed to run on Vercel + Supabase cloud infrastructure.**
 
-### Option 1: Deploy to Cloud (Recommended)
+### Option 1: Deploy to Cloud (Recommended) ⭐
 
-1. **Set up Supabase**
-   - Follow the complete guide in [`SUPABASE_MIGRATION.md`](./SUPABASE_MIGRATION.md)
-   - Create your Supabase project
+**📖 Complete Step-by-Step Guide: [`VERCEL_SETUP.md`](./VERCEL_SETUP.md)**
+
+This is the easiest and fastest way to get started:
+
+1. **Set up Supabase** (5 minutes)
+   - Create free Supabase project
    - Run the database schema
-   - Get your API credentials
+   - Create your first admin user
 
-2. **Deploy to Vercel**
-   - Fork this repository
-   - Import to Vercel
-   - Set environment variables:
-     - `REACT_APP_SUPABASE_URL`
-     - `REACT_APP_SUPABASE_ANON_KEY`
-   - Deploy!
+2. **Deploy to Vercel** (5 minutes)
+   - Import repository to Vercel
+   - Add environment variables
+   - Deploy with one click!
 
-See [`SUPABASE_MIGRATION.md`](./SUPABASE_MIGRATION.md) for detailed step-by-step instructions.
+**👉 Start here: [VERCEL_SETUP.md](./VERCEL_SETUP.md) - Complete deployment guide with screenshots and troubleshooting**
+
+For advanced setup and migration details, see [`SUPABASE_MIGRATION.md`](./SUPABASE_MIGRATION.md).
 
 ### Option 2: Local Development
 
@@ -275,14 +277,33 @@ Update the logo and company name in:
 - Check browser network tab for failed requests
 - Ensure Supabase tables have data
 
-For more troubleshooting help, see [`SUPABASE_MIGRATION.md`](./SUPABASE_MIGRATION.md) and [`supabase/README.md`](./supabase/README.md).
+For more troubleshooting help, see:
+- 📖 [**VERCEL_SETUP.md**](./VERCEL_SETUP.md) - Complete deployment guide
+- 📋 [**QUICK_DEPLOY.md**](./QUICK_DEPLOY.md) - Quick checklist for deployment
+- ⚙️ [**VERCEL_CONFIG.md**](./VERCEL_CONFIG.md) - Vercel dashboard configuration
+- 🔄 [**SUPABASE_MIGRATION.md**](./SUPABASE_MIGRATION.md) - Advanced migration details
 
 ## 📚 Documentation
 
-- **[SUPABASE_MIGRATION.md](./SUPABASE_MIGRATION.md)** - Complete migration guide and deployment instructions
-- **[supabase/README.md](./supabase/README.md)** - Database setup and configuration
-- **[404_FIX.md](./404_FIX.md)** - How the 404 error handling was implemented
-- **[VERCEL_FIX.md](./VERCEL_FIX.md)** - Previous Vercel deployment fixes
+This project includes comprehensive documentation:
+
+### Deployment Guides
+- **[VERCEL_SETUP.md](./VERCEL_SETUP.md)** ⭐ - Start here! Complete step-by-step guide for deploying to Vercel + Supabase
+- **[QUICK_DEPLOY.md](./QUICK_DEPLOY.md)** - Quick reference checklist for deployment (15 minutes)
+- **[VERCEL_CONFIG.md](./VERCEL_CONFIG.md)** - Detailed Vercel dashboard configuration reference
+- **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Legacy deployment options (Heroku, DigitalOcean, AWS)
+
+### Technical Documentation
+- **[SUPABASE_MIGRATION.md](./SUPABASE_MIGRATION.md)** - Database schema, migration from MongoDB, advanced setup
+- **[supabase/README.md](./supabase/README.md)** - Database schema documentation
+- **[supabase/schema.sql](./supabase/schema.sql)** - Complete database schema with RLS policies
+
+### Other Documentation
+- **[USER_GUIDE.md](./USER_GUIDE.md)** - End-user guide for using the CRM
+- **[PROJECT_SUMMARY.md](./PROJECT_SUMMARY.md)** - Project overview and features
+- **[SECURITY.md](./SECURITY.md)** - Security considerations and best practices
+- **[404_FIX.md](./404_FIX.md)** - Details on the custom 404 page implementation
+- **[VERCEL_FIX.md](./VERCEL_FIX.md)** - Historical context on Vercel deployment fixes
 
 ## 🚀 Deployment
 
@@ -291,7 +312,7 @@ This application is designed to run on:
 - **Database**: Supabase (free tier available)
 - **Authentication**: Supabase Auth
 
-See [`SUPABASE_MIGRATION.md`](./SUPABASE_MIGRATION.md) for complete deployment guide.
+See [`VERCEL_SETUP.md`](./VERCEL_SETUP.md) for complete deployment guide.
 
 ## 🙏 Acknowledgments
 
