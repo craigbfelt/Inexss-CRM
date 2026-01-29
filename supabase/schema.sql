@@ -228,8 +228,13 @@ CREATE POLICY "Admins can view all users" ON public.users
 CREATE POLICY "Users can create their own profile" ON public.users
   FOR INSERT WITH CHECK (auth.uid() = id);
 
-CREATE POLICY "Users can update their own data" ON public.users
-  FOR UPDATE USING (auth.uid() = id);
+CREATE POLICY "Users can update their own profile" ON public.users
+  FOR UPDATE USING (auth.uid() = id)
+  WITH CHECK (
+    auth.uid() = id 
+    AND role = (SELECT role FROM public.users WHERE id = auth.uid())
+    AND is_active = (SELECT is_active FROM public.users WHERE id = auth.uid())
+  );
 
 CREATE POLICY "Admins can update users" ON public.users
   FOR UPDATE USING (

@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { supabase, signIn, signOut, getUserProfile, isSupabaseConfigured } from '../lib/supabase';
+import { supabase, signIn, signOut, signUp, getUserProfile, isSupabaseConfigured } from '../lib/supabase';
 
 const AuthContext = createContext(null);
 
@@ -61,14 +61,17 @@ export const AuthProvider = ({ children }) => {
           console.log('Creating missing user profile for:', authUser.email);
           const { data: newProfile, error: createError } = await supabase
             .from('users')
-            .insert([{
+            .upsert([{
               id: authUser.id,
               email: authUser.email,
               name: authUser.user_metadata?.name || authUser.email.split('@')[0],
               role: 'staff',
               location: authUser.user_metadata?.location || 'Other',
               is_active: true
-            }])
+            }], {
+              onConflict: 'id',
+              ignoreDuplicates: false
+            })
             .select()
             .single();
           
@@ -114,10 +117,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
-      // Import signUp from lib/supabase
-      const { signUp } = await import('../lib/supabase');
-      
-      // Sign up the user
+      // Sign up the user - this will create profile in both auth.users and public.users
       await signUp(userData.email, userData.password, {
         name: userData.name,
         location: userData.location
