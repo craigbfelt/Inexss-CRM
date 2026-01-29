@@ -73,35 +73,68 @@ CREATE POLICY "Admins can view all users" ON public.users
 - ✅ Profile auto-creation with proper error handling
 
 **Important Code Section:**
+
+> **Note:** This is a simplified version for illustration. The actual implementation in `client/src/contexts/AuthContext.js` includes additional error handling, logging, and proper state management.
+
 ```javascript
 const fetchUserProfile = async (userId) => {
   try {
     const profile = await getUserProfile(userId);
     setUser(profile);
   } catch (error) {
-    // Check if error is due to missing profile
+    console.error('Failed to fetch user profile:', error);
+    
+    // Only auto-create profile if the error is due to missing profile (no rows returned)
+    // PostgREST returns PGRST116 for no rows, but we check for common patterns
     const isMissingProfile = 
       error.message?.includes('No rows') || 
       error.code === 'PGRST116' ||
       error.details?.includes('0 rows');
     
-    if (isMissingProfile) {
-      // Auto-create profile for users in auth.users but not in public.users
+    if (!isMissingProfile) {
+      // If it's a different error (network, permissions, etc), don't try to auto-create
+      setUser(null);
+      setLoading(false);
+      return;
+    }
+    
+    // If profile doesn't exist in public.users, try to get auth user info
+    try {
       const { data: { user: authUser } } = await supabase.auth.getUser();
       if (authUser) {
-        await supabase.from('users').upsert([{
-          id: authUser.id,
-          email: authUser.email,
-          name: authUser.user_metadata?.name || authUser.email.split('@')[0],
-          role: 'staff',
-          location: authUser.user_metadata?.location || 'Other',
-          is_active: true
-        }], {
-          onConflict: 'id',
-          ignoreDuplicates: true
-        }).select().single();
+        // Auto-create profile for users who exist in auth.users but not in public.users
+        console.log('Creating missing user profile for:', authUser.email);
+        const { data: newProfile, error: createError } = await supabase
+          .from('users')
+          .upsert([{
+            id: authUser.id,
+            email: authUser.email,
+            name: authUser.user_metadata?.name || authUser.email.split('@')[0],
+            role: 'staff',
+            location: authUser.user_metadata?.location || 'Other',
+            is_active: true
+          }], {
+            onConflict: 'id',
+            ignoreDuplicates: true  // Don't overwrite existing profiles
+          })
+          .select()
+          .single();
+        
+        if (createError) {
+          console.error('Failed to create user profile:', createError);
+          setUser(null);
+        } else {
+          setUser(newProfile);
+        }
+      } else {
+        setUser(null);
       }
+    } catch (autoCreateError) {
+      console.error('Failed to auto-create profile:', autoCreateError);
+      setUser(null);
     }
+  } finally {
+    setLoading(false);
   }
 };
 ```
@@ -280,7 +313,7 @@ const result = await login('test@example.com', 'securepassword');
 ### Test 3: Missing Profile Auto-Creation
 ```javascript
 // If user exists in auth.users but not in public.users
-await login('craig@zerobitone.co.za', 'password');
+await login('user@example.com', 'password');
 // ✅ Detects missing profile
 // ✅ Auto-creates profile with safe defaults
 // ✅ User can login successfully
