@@ -86,8 +86,7 @@ export const AuthProvider = ({ children }) => {
               location: authUser.user_metadata?.location || 'Other',
               is_active: true
             }], {
-              onConflict: 'id',
-              ignoreDuplicates: true  // Don't overwrite existing profiles
+              onConflict: 'id'
             })
             .select()
             .single();

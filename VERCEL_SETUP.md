@@ -120,7 +120,7 @@ Vercel should auto-detect the settings from `vercel.json`, but verify:
 - **Framework Preset**: Next.js
 - **Root Directory**: `./` (leave as root)
 - **Build Command**: `cd client && npm run build`
-- **Output Directory**: `client/build`
+- **Output Directory**: `client/.next` (Next.js build output)
 - **Install Command**: `npm install --prefix client`
 
 ### Step 3: Add Environment Variables
@@ -244,9 +244,9 @@ Before testing your deployment, verify these critical configurations are correct
 #### Issue: "404 Page Not Found" on Vercel
 
 **Solutions:**
-- Ensure `vercel.json` has the correct rewrites configuration
 - Check that the build completed successfully in Vercel dashboard → Deployments
-- Verify the output directory is `client/build`
+- Verify the output directory is `client/.next` (Next.js build output)
+- Ensure environment variables are set correctly
 
 #### Issue: "Missing Supabase environment variables"
 
