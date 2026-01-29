@@ -70,18 +70,21 @@ export const signUp = async (email, password, userData) => {
   
   if (authError) throw authError;
   
-  // Then create user profile in public.users table
+  // Then create user profile in public.users table using upsert to handle race conditions
   if (authData.user) {
     const { error: profileError } = await supabase
       .from('users')
-      .insert([{
+      .upsert([{
         id: authData.user.id,
         email: email,
         name: userData.name,
         role: userData.role || 'staff',
         location: userData.location || 'Other',
         is_active: true
-      }]);
+      }], {
+        onConflict: 'id',
+        ignoreDuplicates: true  // Don't overwrite existing profiles, only create new ones
+      });
     
     if (profileError) throw profileError;
   }
