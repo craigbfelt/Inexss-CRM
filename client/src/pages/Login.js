@@ -14,6 +14,7 @@ const Login = () => {
     location: 'JHB'
   });
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const { login, register, configError } = useAuth();
 
@@ -37,6 +38,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setSuccess('');
     setLoading(true);
 
     const result = isLogin 
@@ -45,6 +47,8 @@ const Login = () => {
 
     if (!result.success) {
       setError(result.error);
+    } else if (result.message) {
+      setSuccess(result.message);
     }
     setLoading(false);
   };
@@ -157,6 +161,24 @@ const Login = () => {
               </motion.div>
             )}
 
+            {success && (
+              <motion.div 
+                className="success-message"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                style={{ 
+                  color: '#10b981', 
+                  background: 'rgba(16, 185, 129, 0.1)', 
+                  padding: '12px', 
+                  borderRadius: '8px',
+                  marginBottom: '20px',
+                  border: '1px solid rgba(16, 185, 129, 0.3)'
+                }}
+              >
+                {success}
+              </motion.div>
+            )}
+
             <form onSubmit={handleSubmit} className="login-form">
               {!isLogin && (
                 <motion.div 
@@ -253,6 +275,7 @@ const Login = () => {
                   onClick={() => {
                     setIsLogin(!isLogin);
                     setError('');
+                    setSuccess('');
                   }}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}

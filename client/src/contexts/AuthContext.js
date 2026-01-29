@@ -53,8 +53,38 @@ export const AuthProvider = ({ children }) => {
       setUser(profile);
     } catch (error) {
       console.error('Failed to fetch user profile:', error);
-      // If profile doesn't exist, user might need to complete setup
-      setUser(null);
+      // If profile doesn't exist in public.users, try to get auth user info
+      try {
+        const { data: { user: authUser } } = await supabase.auth.getUser();
+        if (authUser) {
+          // Auto-create profile for users who exist in auth.users but not in public.users
+          console.log('Creating missing user profile for:', authUser.email);
+          const { data: newProfile, error: createError } = await supabase
+            .from('users')
+            .insert([{
+              id: authUser.id,
+              email: authUser.email,
+              name: authUser.user_metadata?.name || authUser.email.split('@')[0],
+              role: 'staff',
+              location: authUser.user_metadata?.location || 'Other',
+              is_active: true
+            }])
+            .select()
+            .single();
+          
+          if (createError) {
+            console.error('Failed to create user profile:', createError);
+            setUser(null);
+          } else {
+            setUser(newProfile);
+          }
+        } else {
+          setUser(null);
+        }
+      } catch (autoCreateError) {
+        console.error('Failed to auto-create profile:', autoCreateError);
+        setUser(null);
+      }
     } finally {
       setLoading(false);
     }
@@ -83,12 +113,27 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = async (userData) => {
-    // Note: In Supabase, registration should be done through the dashboard or API
-    // For now, return error directing to admin
-    return {
-      success: false,
-      error: 'Please contact your administrator to create an account'
-    };
+    try {
+      // Import signUp from lib/supabase
+      const { signUp } = await import('../lib/supabase');
+      
+      // Sign up the user
+      await signUp(userData.email, userData.password, {
+        name: userData.name,
+        location: userData.location
+      });
+      
+      return {
+        success: true,
+        message: 'Account created successfully! Please check your email to verify your account.'
+      };
+    } catch (error) {
+      console.error('Registration error:', error);
+      return {
+        success: false,
+        error: error.message || 'Failed to create account'
+      };
+    }
   };
 
   const logout = async () => {
