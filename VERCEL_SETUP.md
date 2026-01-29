@@ -2,6 +2,26 @@
 
 This guide will help you deploy the Inexss CRM application to Vercel with Supabase as the backend.
 
+## 🚨 Quick Fix: Authentication/Password Reset Issues
+
+**Are you experiencing these issues?**
+- ✗ Can see the login page but can't sign in
+- ✗ Password reset emails redirect to `localhost` instead of your Vercel URL
+
+**Quick Fix:**
+1. Go to your [Supabase Dashboard](https://supabase.com/dashboard) → **Authentication** → **URL Configuration**
+2. Set **Site URL** to your Vercel URL: `https://your-app.vercel.app` (NOT localhost)
+3. Add to **Redirect URLs**: `https://your-app.vercel.app/**`
+4. Go to **Authentication** → **Email Templates** → **Reset Password**
+5. Ensure the template uses `{{ .SiteURL }}` instead of hardcoded localhost URLs
+6. Click **Save** and test again
+
+For detailed instructions, see [Step 5](#step-5-update-supabase-redirect-urls-critical) and [Step 6](#step-6-configure-email-templates-for-password-reset) below.
+
+**📖 Quick Reference:** See [AUTHENTICATION_SETUP.md](./AUTHENTICATION_SETUP.md) for a focused authentication configuration checklist.
+
+---
+
 ## Prerequisites
 
 1. A [Vercel account](https://vercel.com/signup) (free tier available)
@@ -84,6 +104,8 @@ You need to create an admin user to log in:
 
 ## Part 2: Deploy to Vercel
 
+> **⚠️ Important**: After deploying to Vercel, you MUST complete Steps 5 and 6 below to configure Supabase redirect URLs and email templates. Without these steps, authentication and password reset will not work correctly.
+
 ### Step 1: Import Project to Vercel
 
 1. Go to [vercel.com/new](https://vercel.com/new)
@@ -131,21 +153,70 @@ Before deploying, add your Supabase credentials:
 
 **Note:** The app uses Supabase packages that require Node.js 20.x or higher. This is automatically configured in `vercel.json`.
 
-### Step 5: Update Supabase Redirect URLs
+### Step 5: Update Supabase Redirect URLs ⚠️ CRITICAL
+
+This step is **essential** for authentication and password reset to work correctly. If not configured, users won't be able to log in and password reset emails will redirect to localhost.
 
 1. Copy your Vercel deployment URL (e.g., `https://your-app.vercel.app`)
 2. Go back to your **Supabase dashboard**
 3. Navigate to **Authentication** → **URL Configuration**
 4. Update the following:
-   - **Site URL**: Set to your Vercel URL (`https://your-app.vercel.app`)
-   - **Redirect URLs**: Add these patterns:
-     - `https://your-app.vercel.app/**`
-     - `http://localhost:3000/**` (for local development)
+   
+   **Site URL** (Required):
+   - Set to your **production Vercel URL**: `https://your-app.vercel.app`
+   - ⚠️ Do NOT use `localhost` - this must be your live Vercel URL
+   - This URL is used for authentication redirects and email links
+   
+   **Redirect URLs** (Required):
+   - Add your production URL pattern: `https://your-app.vercel.app/**`
+   - Optionally add for local development: `http://localhost:3000/**`
+   - The `**` wildcard allows redirects to any path on your domain
+
 5. Click **"Save"**
+
+### Step 6: Configure Email Templates for Password Reset
+
+By default, Supabase email templates may use localhost URLs. You need to update them to use your production URL:
+
+1. In your **Supabase dashboard**, go to **Authentication** → **Email Templates**
+2. Click on the **"Reset Password"** template
+3. Update the email template to use the `{{ .SiteURL }}` variable instead of hardcoded URLs
+4. Verify the template contains something like:
+   ```html
+   <a href="{{ .SiteURL }}/reset-password?token={{ .Token }}">Reset Password</a>
+   ```
+   Or for the newer Supabase format:
+   ```html
+   <a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery">Reset Password</a>
+   ```
+5. Click **"Save"**
+6. Repeat for other email templates (Confirm signup, Magic Link, etc.) if needed
+
+**Important**: The `{{ .SiteURL }}` variable will automatically use the Site URL you configured in Step 5, ensuring emails always point to your production Vercel deployment.
 
 ## Part 3: Verify Deployment
 
-### Test Your Deployment
+### Step 7: Verify Configuration Checklist
+
+Before testing your deployment, verify these critical configurations are correct:
+
+**Supabase Configuration Checklist:**
+- [ ] **Site URL** is set to your Vercel production URL (not localhost)
+  - Location: Supabase → Authentication → URL Configuration
+  - Should be: `https://your-app.vercel.app`
+- [ ] **Redirect URLs** includes your Vercel domain pattern
+  - Location: Supabase → Authentication → URL Configuration
+  - Should include: `https://your-app.vercel.app/**`
+- [ ] **Email Templates** use `{{ .SiteURL }}` variable (not localhost)
+  - Location: Supabase → Authentication → Email Templates
+  - Check: Reset Password, Confirm signup, Magic Link templates
+- [ ] **Environment Variables** are set in Vercel
+  - Location: Vercel → Project → Settings → Environment Variables
+  - Required: `REACT_APP_SUPABASE_URL` and `REACT_APP_SUPABASE_ANON_KEY`
+- [ ] **Admin User** exists in both `auth.users` and `public.users` tables
+  - Location: Supabase → Authentication → Users & Table Editor → users
+
+### Step 8: Test Your Deployment
 
 1. Open your Vercel URL in a browser
 2. You should see the login page
@@ -154,6 +225,17 @@ Before deploying, add your Supabase credentials:
    - Access the dashboard
    - Navigate between pages
    - View/create brands, clients, projects, etc.
+
+**Test Password Reset (Important):**
+1. Log out of your account
+2. On the login page, you would typically click "Forgot Password" (if implemented)
+3. Alternatively, test via Supabase dashboard:
+   - Go to Supabase → Authentication → Users
+   - Click on your user → **"Send password recovery email"**
+4. Check your email inbox
+5. Click the password reset link
+6. **Verify**: The link should go to `https://your-app.vercel.app/...` (NOT localhost)
+7. If it redirects to localhost, review [Step 6](#step-6-configure-email-templates-for-password-reset)
 
 ### Troubleshooting Common Issues
 
@@ -175,11 +257,53 @@ Before deploying, add your Supabase credentials:
 #### Issue: Can't log in / Authentication errors
 
 **Solutions:**
-- Verify user exists in **both** `auth.users` AND `public.users` tables in Supabase
-- Check the user's UUID matches in both tables
-- Ensure user's `is_active` is set to `true` in `public.users`
-- Clear browser cache and cookies
-- Check browser console for specific error messages
+- **Verify Site URL is set correctly**:
+  - Go to Supabase → **Authentication** → **URL Configuration**
+  - Ensure **Site URL** is your Vercel production URL (e.g., `https://your-app.vercel.app`)
+  - It should NOT be `localhost` or empty
+- **Verify Redirect URLs include your Vercel domain**:
+  - Check that `https://your-app.vercel.app/**` is in the redirect URLs list
+- **Check user exists in both tables**:
+  - Verify user exists in **both** `auth.users` AND `public.users` tables in Supabase
+  - Check the user's UUID matches in both tables
+  - Ensure user's `is_active` is set to `true` in `public.users`
+- **Check password**:
+  - Supabase requires passwords to be at least 6 characters
+  - Try resetting the password via Supabase dashboard
+- **Clear browser cache and cookies**
+- **Check browser console for specific error messages**
+
+#### Issue: Password reset emails redirect to localhost
+
+**Solutions:**
+- **Update Site URL in Supabase**:
+  - Go to Supabase → **Authentication** → **URL Configuration**
+  - Set **Site URL** to your production Vercel URL (e.g., `https://your-app.vercel.app`)
+  - DO NOT use `http://localhost:3000`
+- **Update Email Templates**:
+  - Go to Supabase → **Authentication** → **Email Templates**
+  - Edit the "Reset Password" template
+  - Ensure it uses `{{ .SiteURL }}` variable instead of hardcoded localhost URL
+  - Should look like: `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery`
+  - Click **"Save"**
+- **Test password reset**:
+  - Try sending a password reset email again
+  - The link should now point to your Vercel URL
+  - If still using localhost, clear browser cache and try again
+
+#### Issue: Authentication works locally but not on Vercel
+
+**Solutions:**
+- **Double-check environment variables on Vercel**:
+  - Go to Vercel → Your Project → Settings → Environment Variables
+  - Verify `REACT_APP_SUPABASE_URL` and `REACT_APP_SUPABASE_ANON_KEY` are correct
+  - Make sure they match your Supabase project credentials
+- **Redeploy after changing environment variables**:
+  - Go to Vercel → Deployments → Latest → Three dots → **"Redeploy"**
+  - Environment variable changes require a redeploy to take effect
+- **Check Supabase project is not paused**:
+  - Free tier Supabase projects pause after inactivity
+  - Go to your Supabase dashboard and verify project is active
 
 #### Issue: "Failed to fetch" or CORS errors
 
@@ -264,6 +388,16 @@ To manually trigger a redeploy:
 - Supabase service_role key (use only anon public key in frontend)
 - Database passwords
 
+⚠️ **Production Security:**
+- **Never use localhost URLs in production Supabase configuration**
+  - Site URL must be your production Vercel domain
+  - Localhost URLs will break authentication and create security issues
+- **Keep redirect URLs specific**
+  - Use `https://your-app.vercel.app/**` pattern
+  - Don't use overly broad patterns that could allow unauthorized redirects
+- **Regularly rotate your Supabase keys** if they may have been exposed
+- **Enable Row Level Security (RLS)** policies on all Supabase tables in production
+
 ## Next Steps
 
 After successful deployment:
@@ -290,6 +424,7 @@ If you encounter issues:
 
 ## Additional Resources
 
+- [AUTHENTICATION_SETUP.md](./AUTHENTICATION_SETUP.md) - Quick reference for authentication configuration
 - [SUPABASE_MIGRATION.md](./SUPABASE_MIGRATION.md) - Detailed migration guide
 - [DEPLOYMENT.md](./DEPLOYMENT.md) - General deployment documentation
 - [README.md](./README.md) - Project overview

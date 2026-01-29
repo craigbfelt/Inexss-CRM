@@ -289,6 +289,7 @@ This project includes comprehensive documentation:
 
 ### Deployment Guides
 - **[VERCEL_SETUP.md](./VERCEL_SETUP.md)** ⭐ - Start here! Complete step-by-step guide for deploying to Vercel + Supabase
+- **[AUTHENTICATION_SETUP.md](./AUTHENTICATION_SETUP.md)** 🔐 - Quick reference for authentication configuration and troubleshooting
 - **[QUICK_DEPLOY.md](./QUICK_DEPLOY.md)** - Quick reference checklist for deployment (15 minutes)
 - **[VERCEL_CONFIG.md](./VERCEL_CONFIG.md)** - Detailed Vercel dashboard configuration reference
 - **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Legacy deployment options (Heroku, DigitalOcean, AWS)
