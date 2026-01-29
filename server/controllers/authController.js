@@ -14,57 +14,6 @@ const generateToken = (userId) => {
   );
 };
 
-exports.register = async (req, res) => {
-  try {
-    const { name, email, password, location } = req.body;
-
-    // Validation
-    if (!name || !email || !password) {
-      return res.status(400).json({ error: 'Name, email, and password are required' });
-    }
-
-    if (password.length < 8) {
-      return res.status(400).json({ error: 'Password must be at least 8 characters long' });
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({ error: 'Invalid email format' });
-    }
-
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ error: 'Email already registered' });
-    }
-
-    // Only allow staff role for self-registration
-    const user = new User({
-      name,
-      email,
-      password,
-      role: 'staff',
-      location: location || 'Other'
-    });
-
-    await user.save();
-
-    const token = generateToken(user._id);
-    
-    res.status(201).json({
-      token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        location: user.location
-      }
-    });
-  } catch (error) {
-    res.status(500).json({ error: 'Registration failed', details: error.message });
-  }
-};
-
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
