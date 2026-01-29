@@ -270,3 +270,49 @@ CREATE POLICY "Authenticated users can manage brand_discussions" ON public.brand
 
 CREATE POLICY "Authenticated users can manage action_items" ON public.action_items
   FOR ALL USING (auth.uid() IS NOT NULL);
+
+-- =====================================================
+-- AUTOMATIC USER PROFILE CREATION
+-- =====================================================
+-- This trigger automatically creates a user profile in public.users
+-- when a new user signs up via auth.users. This solves the RLS policy
+-- violation issue during signup by using SECURITY DEFINER to bypass RLS.
+-- See: SIGNUP_RLS_FIX.md for detailed explanation.
+
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER
+SECURITY DEFINER
+SET search_path = public
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  -- Insert a new user profile into public.users
+  -- Use INSERT ... ON CONFLICT to handle race conditions
+  -- Wrapped in exception handler to prevent signup failure if profile creation fails
+  BEGIN
+    INSERT INTO public.users (id, email, name, role, location, is_active)
+    VALUES (
+      NEW.id,
+      NEW.email,
+      COALESCE(NEW.raw_user_meta_data->>'name', split_part(NEW.email, '@', 1)),
+      COALESCE(NEW.raw_user_meta_data->>'role', 'staff'),
+      COALESCE(NEW.raw_user_meta_data->>'location', 'Other'),
+      true
+    )
+    ON CONFLICT (id) DO NOTHING;  -- Don't update if already exists
+  EXCEPTION
+    WHEN OTHERS THEN
+      -- Log the error but don't block signup
+      -- The application can auto-create the profile later if needed
+      RAISE WARNING 'Failed to create user profile for %: %', NEW.email, SQLERRM;
+  END;
+  
+  RETURN NEW;
+END;
+$$;
+
+-- Create trigger to automatically create user profile on signup
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW
+  EXECUTE FUNCTION public.handle_new_user();

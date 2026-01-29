@@ -2,7 +2,17 @@
 
 A comprehensive, visually stunning CRM system designed specifically for Inexx Specialised Solutions - a building specification company working with architects on construction projects.
 
-## ⚠️ Important: RLS Fix for Signup/Login Issues
+## ⚠️ Important: Database Setup & Known Issues
+
+### Signup Row-Level Security Fix (Latest)
+
+If users are getting "new row violates row-level security policy for table 'users'" when signing up:
+
+**✅ Solution:** Run the migration script in `supabase/migration_fix_signup_rls.sql`
+
+📖 **Full Guide:** See [`SIGNUP_RLS_FIX.md`](./SIGNUP_RLS_FIX.md) for complete instructions.
+
+### Previous RLS Fix for Login Issues
 
 If you're experiencing "infinite recursion detected in policy for relation 'users'" errors:
 

@@ -59,35 +59,19 @@ export const signOut = async () => {
 
 // Helper function to sign up
 export const signUp = async (email, password, userData) => {
-  // First create auth user
+  // Create auth user - the database trigger will automatically create the profile
   const { data: authData, error: authError } = await supabase.auth.signUp({
     email,
     password,
     options: {
-      data: userData // metadata
+      data: userData // metadata that will be used by the trigger
     }
   });
   
   if (authError) throw authError;
   
-  // Then create user profile in public.users table using upsert to handle race conditions
-  if (authData.user) {
-    const { error: profileError } = await supabase
-      .from('users')
-      .upsert([{
-        id: authData.user.id,
-        email: email,
-        name: userData.name,
-        role: userData.role || 'staff',
-        location: userData.location || 'Other',
-        is_active: true
-      }], {
-        onConflict: 'id',
-        ignoreDuplicates: true  // Don't overwrite existing profiles, only create new ones
-      });
-    
-    if (profileError) throw profileError;
-  }
+  // Note: User profile in public.users is created automatically by database trigger
+  // See: supabase/migration_fix_signup_rls.sql
   
   return authData;
 };
