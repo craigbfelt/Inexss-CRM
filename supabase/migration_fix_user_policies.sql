@@ -29,11 +29,7 @@ CREATE POLICY "Users can create their own profile" ON public.users
 
 CREATE POLICY "Users can update their own profile" ON public.users
   FOR UPDATE USING (auth.uid() = id)
-  WITH CHECK (
-    auth.uid() = id 
-    AND role = OLD.role
-    AND is_active = OLD.is_active
-  );
+  WITH CHECK (auth.uid() = id);
 
 -- Drop and recreate policies on other tables to remove role checks
 DROP POLICY IF EXISTS "Anyone authenticated can view active brands" ON public.brands;
