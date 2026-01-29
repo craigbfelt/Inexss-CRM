@@ -232,8 +232,8 @@ CREATE POLICY "Users can update their own profile" ON public.users
   FOR UPDATE USING (auth.uid() = id)
   WITH CHECK (
     auth.uid() = id 
-    AND role = (SELECT role FROM public.users WHERE id = auth.uid())
-    AND is_active = (SELECT is_active FROM public.users WHERE id = auth.uid())
+    AND role = OLD.role
+    AND is_active = OLD.is_active
   );
 
 CREATE POLICY "Admins can update users" ON public.users

@@ -53,6 +53,21 @@ export const AuthProvider = ({ children }) => {
       setUser(profile);
     } catch (error) {
       console.error('Failed to fetch user profile:', error);
+      
+      // Only auto-create profile if the error is due to missing profile (no rows returned)
+      // PostgREST returns PGRST116 for no rows, but we check for common patterns
+      const isMissingProfile = 
+        error.message?.includes('No rows') || 
+        error.code === 'PGRST116' ||
+        error.details?.includes('0 rows');
+      
+      if (!isMissingProfile) {
+        // If it's a different error (network, permissions, etc), don't try to auto-create
+        setUser(null);
+        setLoading(false);
+        return;
+      }
+      
       // If profile doesn't exist in public.users, try to get auth user info
       try {
         const { data: { user: authUser } } = await supabase.auth.getUser();
@@ -70,7 +85,7 @@ export const AuthProvider = ({ children }) => {
               is_active: true
             }], {
               onConflict: 'id',
-              ignoreDuplicates: false
+              ignoreDuplicates: true  // Don't overwrite existing profiles
             })
             .select()
             .single();

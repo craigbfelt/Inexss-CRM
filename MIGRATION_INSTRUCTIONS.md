@@ -61,7 +61,7 @@ Expected policies:
 - "Users can view their own data"
 - "Admins can view all users"
 - "Users can create their own profile" (NEW)
-- "Users can update their own data" (NEW)
+- "Users can update their own profile" (NEW)
 - "Admins can update users"
 
 2. Test login with the existing user
@@ -81,7 +81,7 @@ Expected policies:
 ### Database Policies
 The new RLS policies allow:
 - Users to INSERT their own profile (when `auth.uid() = id`)
-- Users to UPDATE their own profile
+- Users to UPDATE their own profile (but not their role or is_active status)
 - Admins to still manage all users
 
 ## Testing

@@ -83,7 +83,7 @@ export const signUp = async (email, password, userData) => {
         is_active: true
       }], {
         onConflict: 'id',
-        ignoreDuplicates: false
+        ignoreDuplicates: true  // Don't overwrite existing profiles, only create new ones
       });
     
     if (profileError) throw profileError;
