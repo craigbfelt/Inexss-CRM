@@ -129,8 +129,10 @@ For advanced setup and migration details, see [`SUPABASE_MIGRATION.md`](./SUPABA
    ```
    
    Edit `client/.env` and add your Supabase credentials:
-   - `REACT_APP_SUPABASE_URL`: Your Supabase project URL
-   - `REACT_APP_SUPABASE_ANON_KEY`: Your Supabase anonymous key
+   - `NEXT_PUBLIC_SUPABASE_URL`: Your Supabase project URL
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Your Supabase anonymous key
+   
+   > **Note**: For backward compatibility, you can also use `REACT_APP_*` prefixed variables.
 
 4. **Set up Supabase**
    

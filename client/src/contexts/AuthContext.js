@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     // Check if Supabase is configured
     if (!isSupabaseConfigured) {
-      setConfigError('Missing Supabase configuration. Please set REACT_APP_SUPABASE_URL and REACT_APP_SUPABASE_ANON_KEY environment variables.');
+      setConfigError('Missing Supabase configuration. Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY environment variables (or REACT_APP_SUPABASE_URL and REACT_APP_SUPABASE_ANON_KEY for local development).');
       setLoading(false);
       return;
     }

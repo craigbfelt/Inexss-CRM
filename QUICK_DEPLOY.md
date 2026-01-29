@@ -57,11 +57,11 @@ Use this checklist to deploy your Inexss CRM to Vercel + Supabase in under 15 mi
 ### 2.2 Add Environment Variables
 - [ ] Click "Environment Variables" section
 - [ ] Add Variable 1:
-  - Name: `REACT_APP_SUPABASE_URL`
+  - Name: `NEXT_PUBLIC_SUPABASE_URL`
   - Value: (paste your Supabase Project URL)
   - Environments: ✓ Production, ✓ Preview, ✓ Development
 - [ ] Add Variable 2:
-  - Name: `REACT_APP_SUPABASE_ANON_KEY`
+  - Name: `NEXT_PUBLIC_SUPABASE_ANON_KEY`
   - Value: (paste your Supabase anon key)
   - Environments: ✓ Production, ✓ Preview, ✓ Development
 
