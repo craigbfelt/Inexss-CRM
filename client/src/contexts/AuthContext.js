@@ -1,29 +1,48 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import apiClient from '../utils/api';
+import { supabase, signIn, signOut, getUserProfile } from '../lib/supabase';
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [token, setToken] = useState(localStorage.getItem('token'));
+  const [session, setSession] = useState(null);
 
   useEffect(() => {
-    if (token) {
-      apiClient.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      fetchProfile();
-    } else {
-      setLoading(false);
-    }
-  }, [token]);
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      if (session?.user) {
+        fetchUserProfile(session.user.id);
+      } else {
+        setLoading(false);
+      }
+    });
 
-  const fetchProfile = async () => {
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      setSession(session);
+      if (session?.user) {
+        await fetchUserProfile(session.user.id);
+      } else {
+        setUser(null);
+        setLoading(false);
+      }
+    });
+
+    return () => {
+      subscription?.unsubscribe();
+    };
+  }, []);
+
+  const fetchUserProfile = async (userId) => {
     try {
-      const response = await apiClient.get('/auth/profile');
-      setUser(response.data);
+      const profile = await getUserProfile(userId);
+      setUser(profile);
     } catch (error) {
-      console.error('Failed to fetch profile:', error);
-      logout();
+      console.error('Failed to fetch user profile:', error);
+      // If profile doesn't exist, user might need to complete setup
+      setUser(null);
     } finally {
       setLoading(false);
     }
@@ -31,51 +50,54 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await apiClient.post('/auth/login', { email, password });
-      const { token: newToken, user: userData } = response.data;
+      const { user: authUser } = await signIn(email, password);
       
-      localStorage.setItem('token', newToken);
-      setToken(newToken);
-      setUser(userData);
-      apiClient.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
+      // Update last login
+      if (authUser) {
+        await supabase
+          .from('users')
+          .update({ last_login: new Date().toISOString() })
+          .eq('id', authUser.id);
+      }
       
       return { success: true };
     } catch (error) {
+      console.error('Login error:', error);
       return { 
         success: false, 
-        error: error.response?.data?.error || 'Login failed' 
+        error: error.message || 'Login failed' 
       };
     }
   };
 
   const register = async (userData) => {
     try {
-      const response = await apiClient.post('/auth/register', userData);
-      const { token: newToken, user: newUser } = response.data;
-      
-      localStorage.setItem('token', newToken);
-      setToken(newToken);
-      setUser(newUser);
-      apiClient.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
-      
-      return { success: true };
+      // Note: In Supabase, registration should be done through the dashboard or API
+      // For now, return error directing to admin
+      return {
+        success: false,
+        error: 'Please contact your administrator to create an account'
+      };
     } catch (error) {
       return { 
         success: false, 
-        error: error.response?.data?.error || 'Registration failed' 
+        error: error.message || 'Registration failed' 
       };
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem('token');
-    setToken(null);
-    setUser(null);
-    delete apiClient.defaults.headers.common['Authorization'];
+  const logout = async () => {
+    try {
+      await signOut();
+      setUser(null);
+      setSession(null);
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, loading, session, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
