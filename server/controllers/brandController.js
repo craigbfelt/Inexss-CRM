@@ -47,7 +47,7 @@ exports.getBrandById = async (req, res) => {
     }
 
     // Check brand access for brand representatives
-    if (req.brandFilter && !req.brandFilter.includes(brand._id)) {
+    if (req.brandFilter && !req.brandFilter.some(bf => bf.toString() === brand._id.toString())) {
       return res.status(403).json({ error: 'Access denied' });
     }
 

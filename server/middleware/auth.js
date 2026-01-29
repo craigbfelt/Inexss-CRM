@@ -1,6 +1,11 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
+const jwtSecret = process.env.JWT_SECRET;
+if (!jwtSecret && process.env.NODE_ENV === 'production') {
+  throw new Error('JWT_SECRET must be defined in production environment');
+}
+
 const auth = async (req, res, next) => {
   try {
     const token = req.header('Authorization')?.replace('Bearer ', '');
@@ -9,7 +14,7 @@ const auth = async (req, res, next) => {
       return res.status(401).json({ error: 'Authentication required' });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'inexss-crm-secret-key-change-in-production');
+    const decoded = jwt.verify(token, jwtSecret || 'inexss-crm-secret-key-change-in-production');
     const user = await User.findById(decoded.userId).select('-password');
     
     if (!user || !user.isActive) {

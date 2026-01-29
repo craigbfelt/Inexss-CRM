@@ -12,11 +12,18 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
     lowercase: true,
-    trim: true
+    trim: true,
+    validate: {
+      validator: function(v) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+      },
+      message: 'Invalid email format'
+    }
   },
   password: {
     type: String,
-    required: true
+    required: true,
+    minlength: [8, 'Password must be at least 8 characters long']
   },
   role: {
     type: String,

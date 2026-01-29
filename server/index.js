@@ -11,18 +11,25 @@ const projectRoutes = require('./routes/projects');
 
 const app = express();
 
+// CORS configuration
+const allowedOrigins = process.env.CLIENT_URL 
+  ? [process.env.CLIENT_URL] 
+  : ['http://localhost:3000'];
+
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production' 
+    ? allowedOrigins 
+    : '*'
+}));
+
 // Middleware
-app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Database connection
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/inexss-crm';
 
-mongoose.connect(MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+mongoose.connect(MONGODB_URI)
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('MongoDB connection error:', err));
 
@@ -41,9 +48,10 @@ app.get('/api/health', (req, res) => {
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
+  const isDevelopment = process.env.NODE_ENV === 'development';
   res.status(500).json({ 
     error: 'Something went wrong!', 
-    details: process.env.NODE_ENV === 'development' ? err.message : undefined 
+    details: isDevelopment ? err.message : undefined 
   });
 });
 

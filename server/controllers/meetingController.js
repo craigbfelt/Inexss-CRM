@@ -144,8 +144,19 @@ exports.getMonthlyReport = async (req, res) => {
       return res.status(400).json({ error: 'Year and month are required' });
     }
 
-    const startDate = new Date(year, month - 1, 1);
-    const endDate = new Date(year, month, 0, 23, 59, 59);
+    const yearNum = parseInt(year);
+    const monthNum = parseInt(month);
+
+    if (isNaN(yearNum) || yearNum < 2000 || yearNum > 2100) {
+      return res.status(400).json({ error: 'Invalid year. Must be between 2000 and 2100' });
+    }
+
+    if (isNaN(monthNum) || monthNum < 1 || monthNum > 12) {
+      return res.status(400).json({ error: 'Invalid month. Must be between 1 and 12' });
+    }
+
+    const startDate = new Date(yearNum, monthNum - 1, 1);
+    const endDate = new Date(yearNum, monthNum, 0, 23, 59, 59);
 
     const filter = {
       meetingDate: { $gte: startDate, $lte: endDate },
@@ -205,7 +216,7 @@ exports.getMonthlyReport = async (req, res) => {
     });
 
     res.json({
-      period: { year: parseInt(year), month: parseInt(month) },
+      period: { year: yearNum, month: monthNum },
       summary,
       meetings
     });
