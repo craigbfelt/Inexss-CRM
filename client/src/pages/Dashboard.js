@@ -6,6 +6,7 @@ import {
   UserCircle, Bell, Search
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import ClientsManager from '../components/ClientsManager';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -338,17 +339,7 @@ const MeetingsContent = ({ user }) => (
   </div>
 );
 
-const ClientsContent = ({ user }) => (
-  <div className="placeholder-content">
-    <h2>Clients & Architects</h2>
-    <p>Manage your client relationships and contact information.</p>
-    {['contractor', 'supplier'].includes(user?.role) && (
-      <div className="info-banner">
-        <p>👁️ You have read-only access to client information.</p>
-      </div>
-    )}
-  </div>
-);
+const ClientsContent = ({ user }) => <ClientsManager user={user} />;
 
 const ProjectsContent = ({ user }) => (
   <div className="placeholder-content">
