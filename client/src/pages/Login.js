@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
 import { LogIn, UserPlus, Sparkles, Building2, Users, TrendingUp } from 'lucide-react';
+import ConfigurationError from '../components/ConfigurationError';
 import './Login.css';
 
 const Login = () => {
@@ -14,7 +15,24 @@ const Login = () => {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login, register } = useAuth();
+  const { login, register, configError } = useAuth();
+
+  // Show configuration error if present
+  if (configError) {
+    return (
+      <div className="login-container">
+        <div className="animated-bg">
+          <div className="floating-shape shape-1"></div>
+          <div className="floating-shape shape-2"></div>
+          <div className="floating-shape shape-3"></div>
+          <div className="floating-shape shape-4"></div>
+        </div>
+        <div className="login-content" style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <ConfigurationError message={configError} />
+        </div>
+      </div>
+    );
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
