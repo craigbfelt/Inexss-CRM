@@ -19,9 +19,19 @@ if (fs.existsSync(envPath)) {
   const envContent = fs.readFileSync(envPath, 'utf-8');
   envContent.split('\n').forEach(line => {
     line = line.trim();
-    if (line && !line.startsWith('#')) {
-      const [key, ...valueParts] = line.split('=');
-      const value = valueParts.join('=');
+    if (line && !line.startsWith('#') && !line.startsWith('export ')) {
+      const equalIndex = line.indexOf('=');
+      if (equalIndex === -1) return;
+      
+      let key = line.substring(0, equalIndex).trim();
+      let value = line.substring(equalIndex + 1).trim();
+      
+      // Remove quotes if present
+      if ((value.startsWith('"') && value.endsWith('"')) || 
+          (value.startsWith("'") && value.endsWith("'"))) {
+        value = value.slice(1, -1);
+      }
+      
       if (key && value && !process.env[key]) {
         process.env[key] = value;
       }
@@ -56,12 +66,29 @@ if (mappedCount > 0) {
 // If called directly (not required as a module), run the build command
 if (require.main === module) {
   const { spawn } = require('child_process');
-  const buildCommand = process.argv[2] || 'react-scripts build';
-  const [cmd, ...args] = buildCommand.split(' ');
+  
+  // Get the command from argv and split it properly
+  // For safety, we only accept predefined build commands
+  const allowedCommands = [
+    'cross-env CI=false react-scripts build',
+    'react-scripts build'
+  ];
+  
+  const commandString = process.argv[2] || 'cross-env CI=false react-scripts build';
+  
+  if (!allowedCommands.includes(commandString)) {
+    console.error(`Error: Command "${commandString}" is not in the list of allowed build commands.`);
+    process.exit(1);
+  }
+  
+  // Parse the command safely without shell
+  const parts = commandString.split(' ');
+  const cmd = parts[0];
+  const args = parts.slice(1);
   
   const child = spawn(cmd, args, {
     stdio: 'inherit',
-    shell: true,
+    shell: false,
     env: process.env
   });
   
@@ -69,4 +96,3 @@ if (require.main === module) {
     process.exit(code || 0);
   });
 }
-
