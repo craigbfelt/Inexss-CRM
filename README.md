@@ -45,9 +45,9 @@ A comprehensive, visually stunning CRM system designed specifically for Inexx Sp
 ## 🛠️ Technology Stack
 
 ### Backend
-- **Node.js** with Express.js
-- **MongoDB** with Mongoose ODM
-- **JWT** for authentication
+- **Supabase** - PostgreSQL database with built-in auth
+- **Vercel** - Serverless deployment
+- **Row Level Security (RLS)** - Database-level authorization
 - **bcryptjs** for password hashing
 - **Express Validator** for input validation
 
@@ -57,16 +57,39 @@ A comprehensive, visually stunning CRM system designed specifically for Inexx Sp
 - **Framer Motion** for animations
 - **Lucide React** for beautiful icons
 - **Recharts** for data visualization
-- **Axios** for API communication
+- **Supabase JS Client** for database and auth
 - **date-fns** for date handling
 
 ## 📋 Prerequisites
 
-- Node.js (v14 or higher)
-- MongoDB (local or cloud instance)
+- Node.js (v18 or higher)
+- Supabase account (free tier available)
+- Vercel account (free tier available)
 - npm or yarn package manager
 
-## 🚀 Installation
+## 🚀 Quick Start (Cloud Deployment)
+
+**This application is designed to run on Vercel + Supabase cloud infrastructure.**
+
+### Option 1: Deploy to Cloud (Recommended)
+
+1. **Set up Supabase**
+   - Follow the complete guide in [`SUPABASE_MIGRATION.md`](./SUPABASE_MIGRATION.md)
+   - Create your Supabase project
+   - Run the database schema
+   - Get your API credentials
+
+2. **Deploy to Vercel**
+   - Fork this repository
+   - Import to Vercel
+   - Set environment variables:
+     - `REACT_APP_SUPABASE_URL`
+     - `REACT_APP_SUPABASE_ANON_KEY`
+   - Deploy!
+
+See [`SUPABASE_MIGRATION.md`](./SUPABASE_MIGRATION.md) for detailed step-by-step instructions.
+
+### Option 2: Local Development
 
 1. **Clone the repository**
    ```bash
@@ -74,80 +97,39 @@ A comprehensive, visually stunning CRM system designed specifically for Inexx Sp
    cd Inexss-CRM
    ```
 
-2. **Install backend dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Install frontend dependencies**
+2. **Install frontend dependencies**
    ```bash
    cd client
    npm install
-   cd ..
    ```
 
-4. **Set up environment variables**
+3. **Set up environment variables**
    ```bash
    cp .env.example .env
    ```
    
-   Edit `.env` and configure:
-   - `MONGODB_URI`: Your MongoDB connection string
-   - `JWT_SECRET`: A secure random string for JWT tokens
-   - `PORT`: Backend server port (default: 5000)
+   Edit `client/.env` and add your Supabase credentials:
+   - `REACT_APP_SUPABASE_URL`: Your Supabase project URL
+   - `REACT_APP_SUPABASE_ANON_KEY`: Your Supabase anonymous key
 
-5. **Start MongoDB**
+4. **Set up Supabase**
    
-   If using local MongoDB:
-   ```bash
-   mongod
-   ```
-   
-   Or use a cloud service like MongoDB Atlas
+   Follow the setup guide in [`supabase/README.md`](./supabase/README.md) to create your database.
 
 ## 🎯 Running the Application
 
-### Development Mode
+### Development Mode (Local)
 
-**Option 1: Run both servers concurrently**
-```bash
-# Terminal 1 - Start backend
-npm run dev
-
-# Terminal 2 - Start frontend
-npm run client
-```
-
-**Option 2: Quick start**
-```bash
-# Install all dependencies
-npm run install-all
-
-# Start backend
-npm run dev
-```
-
-Then in another terminal:
 ```bash
 cd client
 npm start
 ```
 
-The application will open at:
-- Frontend: `http://localhost:3000`
-- Backend API: `http://localhost:5000`
+The application will open at `http://localhost:3000` and connect to your Supabase project.
 
 ### Production Mode
 
-1. **Build the frontend**
-   ```bash
-   npm run build
-   ```
-
-2. **Start the server**
-   ```bash
-   npm start
-   ```
+Deploy to Vercel - see [`SUPABASE_MIGRATION.md`](./SUPABASE_MIGRATION.md) for complete instructions.
 
 ## 👥 User Roles
 
@@ -223,41 +205,30 @@ The application will open at:
 - Input validation and sanitization
 - Secure session management
 
-## 📱 API Endpoints
+## 📡 Database & API
+
+### Database Tables
+- **users** - User profiles with role-based access
+- **brands** - Brand/principal information
+- **clients** - Architect, developer, and contractor records
+- **projects** - Building projects with status tracking
+- **meetings** - Meeting records with brand discussions
+- **action_items** - Follow-up tasks from meetings
 
 ### Authentication
-- `POST /api/auth/register` - Register new user
-- `POST /api/auth/login` - User login
-- `GET /api/auth/profile` - Get user profile
+- Powered by **Supabase Auth**
+- Email/password authentication
+- Row Level Security (RLS) policies for authorization
+- Session management with auto-refresh
 
-### Brands
-- `GET /api/brands` - List all brands
-- `POST /api/brands` - Create brand (admin only)
-- `GET /api/brands/:id` - Get brand details
-- `PUT /api/brands/:id` - Update brand (admin only)
-- `DELETE /api/brands/:id` - Delete brand (admin only)
+### Data Access
+All data access is handled through Supabase client services:
+- `brandService.js` - Brand CRUD operations
+- `clientService.js` - Client management
+- `projectService.js` - Project tracking with brand relationships
+- `meetingService.js` - Meeting records with discussions and action items
 
-### Clients
-- `GET /api/clients` - List all clients
-- `POST /api/clients` - Create client
-- `GET /api/clients/:id` - Get client details
-- `PUT /api/clients/:id` - Update client
-- `DELETE /api/clients/:id` - Delete client
-
-### Meetings
-- `GET /api/meetings` - List meetings (filtered by role)
-- `POST /api/meetings` - Create meeting
-- `GET /api/meetings/:id` - Get meeting details
-- `PUT /api/meetings/:id` - Update meeting
-- `DELETE /api/meetings/:id` - Delete meeting
-- `GET /api/meetings/report/monthly` - Generate monthly report
-
-### Projects
-- `GET /api/projects` - List projects (filtered by role)
-- `POST /api/projects` - Create project
-- `GET /api/projects/:id` - Get project details
-- `PUT /api/projects/:id` - Update project
-- `DELETE /api/projects/:id` - Delete project
+See [`SUPABASE_MIGRATION.md`](./SUPABASE_MIGRATION.md) for API details and database schema.
 
 ## 🎨 Customization
 
@@ -279,36 +250,48 @@ Update the logo and company name in:
 
 ## 🐛 Troubleshooting
 
-### MongoDB Connection Issues
-- Ensure MongoDB is running
-- Check connection string in `.env`
-- Verify network access if using MongoDB Atlas
+### Supabase Connection Issues
+- Verify environment variables are set correctly
+- Check Supabase project is not paused (free tier auto-pauses)
+- Verify API keys are from the correct project
+- Check browser console for detailed error messages
 
-### Port Already in Use
-- Change the PORT in `.env`
-- Or stop the process using the port:
-  ```bash
-  # Find process
-  lsof -i :5000
-  # Kill process
-  kill -9 <PID>
-  ```
+### Authentication Issues
+- Clear browser local storage and cookies
+- Verify user exists in both `auth.users` and `public.users` tables
+- Check RLS policies are enabled
+- Ensure user role matches policy requirements
 
 ### Build Errors
 - Clear node_modules and reinstall:
   ```bash
   rm -rf node_modules client/node_modules
-  npm install
   cd client && npm install
   ```
 
-## 📝 License
+### Data Not Appearing
+- Check RLS policies in Supabase dashboard
+- Verify user is authenticated
+- Check browser network tab for failed requests
+- Ensure Supabase tables have data
 
-MIT License - feel free to use this project for your organization.
+For more troubleshooting help, see [`SUPABASE_MIGRATION.md`](./SUPABASE_MIGRATION.md) and [`supabase/README.md`](./supabase/README.md).
 
-## 👨‍💻 Author
+## 📚 Documentation
 
-Craig Felt
+- **[SUPABASE_MIGRATION.md](./SUPABASE_MIGRATION.md)** - Complete migration guide and deployment instructions
+- **[supabase/README.md](./supabase/README.md)** - Database setup and configuration
+- **[404_FIX.md](./404_FIX.md)** - How the 404 error handling was implemented
+- **[VERCEL_FIX.md](./VERCEL_FIX.md)** - Previous Vercel deployment fixes
+
+## 🚀 Deployment
+
+This application is designed to run on:
+- **Frontend**: Vercel (free tier available)
+- **Database**: Supabase (free tier available)
+- **Authentication**: Supabase Auth
+
+See [`SUPABASE_MIGRATION.md`](./SUPABASE_MIGRATION.md) for complete deployment guide.
 
 ## 🙏 Acknowledgments
 
@@ -316,5 +299,5 @@ Built for Janine Course and the Inexx Specialised Solutions team to streamline t
 
 ---
 
-**Note**: This is a custom-built CRM solution tailored specifically for the building specification industry and multi-brand representation business model.
+**Note**: This is a custom-built CRM solution tailored specifically for the building specification industry and multi-brand representation business model, now running entirely on cloud infrastructure with Vercel + Supabase.
 
