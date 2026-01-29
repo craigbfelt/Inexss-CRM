@@ -71,23 +71,25 @@ A comprehensive, visually stunning CRM system designed specifically for Inexx Sp
 
 **This application is designed to run on Vercel + Supabase cloud infrastructure.**
 
-### Option 1: Deploy to Cloud (Recommended)
+### Option 1: Deploy to Cloud (Recommended) ⭐
 
-1. **Set up Supabase**
-   - Follow the complete guide in [`SUPABASE_MIGRATION.md`](./SUPABASE_MIGRATION.md)
-   - Create your Supabase project
+**📖 Complete Step-by-Step Guide: [`VERCEL_SETUP.md`](./VERCEL_SETUP.md)**
+
+This is the easiest and fastest way to get started:
+
+1. **Set up Supabase** (5 minutes)
+   - Create free Supabase project
    - Run the database schema
-   - Get your API credentials
+   - Create your first admin user
 
-2. **Deploy to Vercel**
-   - Fork this repository
-   - Import to Vercel
-   - Set environment variables:
-     - `REACT_APP_SUPABASE_URL`
-     - `REACT_APP_SUPABASE_ANON_KEY`
-   - Deploy!
+2. **Deploy to Vercel** (5 minutes)
+   - Import repository to Vercel
+   - Add environment variables
+   - Deploy with one click!
 
-See [`SUPABASE_MIGRATION.md`](./SUPABASE_MIGRATION.md) for detailed step-by-step instructions.
+**👉 Start here: [VERCEL_SETUP.md](./VERCEL_SETUP.md) - Complete deployment guide with screenshots and troubleshooting**
+
+For advanced setup and migration details, see [`SUPABASE_MIGRATION.md`](./SUPABASE_MIGRATION.md).
 
 ### Option 2: Local Development
 
