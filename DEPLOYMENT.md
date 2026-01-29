@@ -56,7 +56,60 @@ Access the application at `http://localhost:3000`
 
 ## Production Deployment Options
 
-### Option 1: Heroku Deployment
+### Option 1: Vercel Deployment (Frontend Only)
+
+Vercel is a great option for deploying the React frontend. Note that this deploys only the client-side application - you'll need to deploy the backend separately (see other options).
+
+#### Prerequisites
+- Vercel account (sign up at https://vercel.com)
+- GitHub repository connected to Vercel
+
+#### Configuration
+
+The repository includes a `vercel.json` file that configures Vercel to:
+- Build the React app from the `client` directory
+- Use `@vercel/static-build` builder
+- Output to the `client/build` directory
+- Route all requests to `index.html` for client-side routing
+
+#### Deployment Steps
+
+1. **Import Project to Vercel**
+   - Go to https://vercel.com/new
+   - Import your GitHub repository
+   - Vercel will auto-detect the configuration from `vercel.json`
+
+2. **Configure Environment Variables** (if needed)
+   - In Vercel dashboard, go to Project Settings > Environment Variables
+   - Add any required environment variables for the React app
+   - Example: `REACT_APP_API_URL=https://your-backend-api.com`
+
+3. **Deploy**
+   - Click "Deploy"
+   - Vercel will build and deploy your application
+   - Your app will be available at `https://your-project.vercel.app`
+
+4. **Deploy Backend Separately**
+   - The backend (Express server) needs to be deployed to a platform like Heroku, DigitalOcean, or AWS
+   - See options below for backend deployment
+   - Update the React app's API URL to point to your deployed backend
+
+#### Important Notes
+
+- The `vercel.json` configures Vercel to build the Create React App from the `client` directory
+- The build uses `CI=false` to prevent treating warnings as errors
+- All requests are routed to `index.html` to support React Router
+- This configuration deploys only the frontend - the backend must be deployed separately
+
+#### Troubleshooting Vercel Deployment
+
+If you encounter issues:
+- Ensure the `vercel.json` file is present in the root directory
+- Check that the build succeeds locally: `cd client && npm run build`
+- Review build logs in the Vercel dashboard
+- Verify environment variables are set correctly
+
+### Option 2: Heroku Deployment
 
 #### Step 1: Prepare Application
 
@@ -136,7 +189,7 @@ git push heroku main
 heroku open
 ```
 
-### Option 2: DigitalOcean Deployment
+### Option 3: DigitalOcean Deployment
 
 #### Step 1: Create Droplet
 
@@ -246,7 +299,7 @@ apt install -y certbot python3-certbot-nginx
 certbot --nginx -d your-domain.com
 ```
 
-### Option 3: AWS EC2 Deployment
+### Option 4: AWS EC2 Deployment
 
 Similar to DigitalOcean, but:
 1. Launch EC2 instance (t2.medium or larger)
