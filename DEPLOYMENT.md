@@ -49,7 +49,7 @@ npm run dev
 
 # Terminal 2 - Frontend
 cd client
-npm start
+npm run dev
 ```
 
 Access the application at `http://localhost:3000`
@@ -96,9 +96,8 @@ The repository includes a `vercel.json` file that configures Vercel to:
 
 #### Important Notes
 
-- The `vercel.json` configures Vercel to build the Create React App from the `client` directory
-- The build uses `CI=false` to prevent treating warnings as errors
-- All requests are routed to `index.html` to support React Router
+- The `vercel.json` configures Vercel to build the Next.js app from the `client` directory
+- Next.js handles routing automatically
 - This configuration deploys only the frontend - the backend must be deployed separately
 
 #### Troubleshooting Vercel Deployment
