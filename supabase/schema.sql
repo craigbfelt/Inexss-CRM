@@ -200,6 +200,34 @@ CREATE TRIGGER update_action_items_updated_at BEFORE UPDATE ON public.action_ite
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- =====================================================
+-- SECURITY DEFINER FUNCTIONS
+-- =====================================================
+-- These functions bypass RLS to prevent infinite recursion
+-- when checking user roles in RLS policies
+
+-- Function to check if the current user has a specific role
+CREATE OR REPLACE FUNCTION public.check_user_role(required_role text)
+RETURNS boolean AS $$
+BEGIN
+  RETURN EXISTS (
+    SELECT 1 FROM public.users 
+    WHERE id = auth.uid() AND role = required_role
+  );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Function to check if the current user has one of several roles
+CREATE OR REPLACE FUNCTION public.check_user_roles(required_roles text[])
+RETURNS boolean AS $$
+BEGIN
+  RETURN EXISTS (
+    SELECT 1 FROM public.users 
+    WHERE id = auth.uid() AND role = ANY(required_roles)
+  );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- =====================================================
 -- ROW LEVEL SECURITY (RLS) POLICIES
 -- =====================================================
 
@@ -219,11 +247,7 @@ CREATE POLICY "Users can view their own data" ON public.users
   FOR SELECT USING (auth.uid() = id);
 
 CREATE POLICY "Admins can view all users" ON public.users
-  FOR SELECT USING (
-    EXISTS (
-      SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
+  FOR SELECT USING (public.check_user_role('admin'));
 
 CREATE POLICY "Users can create their own profile" ON public.users
   FOR INSERT WITH CHECK (auth.uid() = id);
@@ -237,109 +261,53 @@ CREATE POLICY "Users can update their own profile" ON public.users
   );
 
 CREATE POLICY "Admins can update users" ON public.users
-  FOR UPDATE USING (
-    EXISTS (
-      SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
+  FOR UPDATE USING (public.check_user_role('admin'));
 
 -- Brands table policies
 CREATE POLICY "Anyone authenticated can view active brands" ON public.brands
   FOR SELECT USING (is_active = true AND auth.uid() IS NOT NULL);
 
 CREATE POLICY "Admins can manage brands" ON public.brands
-  FOR ALL USING (
-    EXISTS (
-      SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
+  FOR ALL USING (public.check_user_role('admin'));
 
 -- Clients table policies
 CREATE POLICY "Authenticated users can view clients" ON public.clients
   FOR SELECT USING (auth.uid() IS NOT NULL);
 
 CREATE POLICY "Staff and admin can create clients" ON public.clients
-  FOR INSERT WITH CHECK (
-    EXISTS (
-      SELECT 1 FROM public.users 
-      WHERE id = auth.uid() 
-      AND role IN ('admin', 'staff')
-    )
-  );
+  FOR INSERT WITH CHECK (public.check_user_roles(ARRAY['admin', 'staff']));
 
 CREATE POLICY "Staff and admin can update clients" ON public.clients
-  FOR UPDATE USING (
-    EXISTS (
-      SELECT 1 FROM public.users 
-      WHERE id = auth.uid() 
-      AND role IN ('admin', 'staff')
-    )
-  );
+  FOR UPDATE USING (public.check_user_roles(ARRAY['admin', 'staff']));
 
 CREATE POLICY "Admins can delete clients" ON public.clients
-  FOR DELETE USING (
-    EXISTS (
-      SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
+  FOR DELETE USING (public.check_user_role('admin'));
 
 -- Projects table policies  
 CREATE POLICY "Authenticated users can view projects" ON public.projects
   FOR SELECT USING (auth.uid() IS NOT NULL);
 
 CREATE POLICY "Staff and admin can create projects" ON public.projects
-  FOR INSERT WITH CHECK (
-    EXISTS (
-      SELECT 1 FROM public.users 
-      WHERE id = auth.uid() 
-      AND role IN ('admin', 'staff')
-    )
-  );
+  FOR INSERT WITH CHECK (public.check_user_roles(ARRAY['admin', 'staff']));
 
 CREATE POLICY "Staff and admin can update projects" ON public.projects
-  FOR UPDATE USING (
-    EXISTS (
-      SELECT 1 FROM public.users 
-      WHERE id = auth.uid() 
-      AND role IN ('admin', 'staff')
-    )
-  );
+  FOR UPDATE USING (public.check_user_roles(ARRAY['admin', 'staff']));
 
 CREATE POLICY "Admins can delete projects" ON public.projects
-  FOR DELETE USING (
-    EXISTS (
-      SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
+  FOR DELETE USING (public.check_user_role('admin'));
 
 -- Meetings table policies
 CREATE POLICY "Authenticated users can view meetings" ON public.meetings
   FOR SELECT USING (auth.uid() IS NOT NULL);
 
 CREATE POLICY "Staff and admin can create meetings" ON public.meetings
-  FOR INSERT WITH CHECK (
-    EXISTS (
-      SELECT 1 FROM public.users 
-      WHERE id = auth.uid() 
-      AND role IN ('admin', 'staff', 'brand_representative')
-    )
-  );
+  FOR INSERT WITH CHECK (public.check_user_roles(ARRAY['admin', 'staff', 'brand_representative']));
 
 CREATE POLICY "Staff and admin can update meetings" ON public.meetings
-  FOR UPDATE USING (
-    EXISTS (
-      SELECT 1 FROM public.users 
-      WHERE id = auth.uid() 
-      AND role IN ('admin', 'staff', 'brand_representative')
-    )
-  );
+  FOR UPDATE USING (public.check_user_roles(ARRAY['admin', 'staff', 'brand_representative']));
 
 CREATE POLICY "Admins can delete meetings" ON public.meetings
-  FOR DELETE USING (
-    EXISTS (
-      SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
+  FOR DELETE USING (public.check_user_role('admin'));
 
 -- Related tables policies (simplified for now)
 CREATE POLICY "Authenticated users can view user_brand_access" ON public.user_brand_access
@@ -356,28 +324,10 @@ CREATE POLICY "Authenticated users can view action_items" ON public.action_items
 
 -- Allow staff to manage related data
 CREATE POLICY "Staff can manage project_brands" ON public.project_brands
-  FOR ALL USING (
-    EXISTS (
-      SELECT 1 FROM public.users 
-      WHERE id = auth.uid() 
-      AND role IN ('admin', 'staff')
-    )
-  );
+  FOR ALL USING (public.check_user_roles(ARRAY['admin', 'staff']));
 
 CREATE POLICY "Staff can manage brand_discussions" ON public.brand_discussions
-  FOR ALL USING (
-    EXISTS (
-      SELECT 1 FROM public.users 
-      WHERE id = auth.uid() 
-      AND role IN ('admin', 'staff', 'brand_representative')
-    )
-  );
+  FOR ALL USING (public.check_user_roles(ARRAY['admin', 'staff', 'brand_representative']));
 
 CREATE POLICY "Staff can manage action_items" ON public.action_items
-  FOR ALL USING (
-    EXISTS (
-      SELECT 1 FROM public.users 
-      WHERE id = auth.uid() 
-      AND role IN ('admin', 'staff', 'brand_representative')
-    )
-  );
+  FOR ALL USING (public.check_user_roles(ARRAY['admin', 'staff', 'brand_representative']));
