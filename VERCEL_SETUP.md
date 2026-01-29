@@ -16,7 +16,7 @@ This guide will help you deploy the Inexss CRM application to Vercel with Supaba
 5. Ensure the template uses `{{ .SiteURL }}` instead of hardcoded localhost URLs
 6. Click **Save** and test again
 
-For detailed instructions, see [Step 5](#step-5-update-supabase-redirect-urls--critical) and [Step 6](#step-6-configure-email-templates-for-password-reset) below.
+For detailed instructions, see [Step 5](#step-5-update-supabase-redirect-urls-critical) and [Step 6](#step-6-configure-email-templates-for-password-reset) below.
 
 **📖 Quick Reference:** See [AUTHENTICATION_SETUP.md](./AUTHENTICATION_SETUP.md) for a focused authentication configuration checklist.
 
