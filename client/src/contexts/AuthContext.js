@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { supabase, signIn, signOut, getUserProfile } from '../lib/supabase';
+import { supabase, signIn, signOut, getUserProfile, isSupabaseConfigured } from '../lib/supabase';
 
 const AuthContext = createContext(null);
 
@@ -7,8 +7,16 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState(null);
+  const [configError, setConfigError] = useState(null);
 
   useEffect(() => {
+    // Check if Supabase is configured
+    if (!isSupabaseConfigured) {
+      setConfigError('Missing Supabase configuration. Please set REACT_APP_SUPABASE_URL and REACT_APP_SUPABASE_ANON_KEY environment variables.');
+      setLoading(false);
+      return;
+    }
+
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
@@ -17,6 +25,10 @@ export const AuthProvider = ({ children }) => {
       } else {
         setLoading(false);
       }
+    }).catch((error) => {
+      console.error('Failed to get session:', error);
+      setConfigError('Failed to connect to authentication service. Please check your configuration.');
+      setLoading(false);
     });
 
     // Listen for auth changes
@@ -71,19 +83,12 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = async (userData) => {
-    try {
-      // Note: In Supabase, registration should be done through the dashboard or API
-      // For now, return error directing to admin
-      return {
-        success: false,
-        error: 'Please contact your administrator to create an account'
-      };
-    } catch (error) {
-      return { 
-        success: false, 
-        error: error.message || 'Registration failed' 
-      };
-    }
+    // Note: In Supabase, registration should be done through the dashboard or API
+    // For now, return error directing to admin
+    return {
+      success: false,
+      error: 'Please contact your administrator to create an account'
+    };
   };
 
   const logout = async () => {
@@ -97,7 +102,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, session, login, register, logout }}>
+    <AuthContext.Provider value={{ user, loading, session, login, register, logout, configError }}>
       {children}
     </AuthContext.Provider>
   );
