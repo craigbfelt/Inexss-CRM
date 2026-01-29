@@ -1,13 +1,21 @@
 # Supabase Migration Instructions
 
 ## Problem
-Users manually added to Supabase `auth.users` table cannot log in because there's no corresponding entry in the `public.users` table. Additionally, the RLS policies were preventing users from creating their own profiles.
+Users manually added to Supabase `auth.users` table cannot log in because there's no corresponding entry in the `public.users` table. Additionally, the RLS policies were causing infinite recursion during signup and login operations, preventing authentication from working correctly.
+
+## Root Cause
+The RLS policies for the `users` table were checking user roles by querying `public.users`, which triggered the same policies again, creating infinite recursion. This affected:
+- New user signup (cannot create profile)
+- Existing user login (cannot read own profile)
+- Admin operations (cannot check admin status)
 
 ## Solution
 This update fixes the authentication flow by:
-1. Allowing users to create their own profile in `public.users` when they sign up
-2. Auto-creating missing profiles for users who exist in `auth.users` but not in `public.users`
-3. Enabling the signup functionality to work correctly
+1. Creating SECURITY DEFINER functions that bypass RLS to check user roles safely
+2. Updating all RLS policies to use these functions instead of directly querying `public.users`
+3. Allowing users to create their own profile in `public.users` when they sign up
+4. Auto-creating missing profiles for users who exist in `auth.users` but not in `public.users`
+5. Enabling both signup and login functionality to work correctly
 
 ## Migration Steps
 
@@ -59,10 +67,10 @@ WHERE tablename = 'users';
 
 Expected policies:
 - "Users can view their own data"
-- "Admins can view all users"
+- "Admins can view all users" (updated to use security definer function)
 - "Users can create their own profile" (NEW)
 - "Users can update their own profile" (NEW)
-- "Admins can update users"
+- "Admins can update users" (updated to use security definer function)
 
 2. Test login with the existing user
 3. Test signup with a new user
@@ -75,14 +83,25 @@ Expected policies:
    - `register()` now calls the actual signup function instead of blocking
 
 2. **supabase/schema.sql**
+   - Added `check_user_role()` and `check_user_roles()` SECURITY DEFINER functions
+   - Updated all RLS policies to use these functions to prevent infinite recursion
    - Added "Users can create their own profile" policy
    - Added "Users can update their own data" policy
+
+3. **supabase/migration_fix_user_policies.sql**
+   - Added SECURITY DEFINER functions
+   - Updated policies to prevent infinite recursion
 
 ### Database Policies
 The new RLS policies allow:
 - Users to INSERT their own profile (when `auth.uid() = id`)
 - Users to UPDATE their own profile (but not their role or is_active status)
-- Admins to still manage all users
+- Admins to view and manage all users (using SECURITY DEFINER functions to avoid recursion)
+- All role-based policies now use the safe functions to check permissions
+
+**Security hardening:**
+- Functions use `SET search_path` to prevent search_path injection attacks
+- Functions are restricted to authenticated users only (GRANT/REVOKE statements)
 
 ## Testing
 
@@ -118,10 +137,14 @@ If `email_confirmed_at` is NULL:
 2. Find the user and click the three dots
 3. Click "Confirm Email"
 
-### Issue: "Failed to create user profile" error
-**Check:** Are the RLS policies applied correctly?
-- Run the migration SQL again
+### Issue: "Failed to create user profile" error or "infinite recursion detected" error
+**Check:** Are the RLS policies and SECURITY DEFINER functions applied correctly?
+- Run the migration SQL again (it includes the functions and updated policies)
 - Verify policies with the query in Step 3 above
+- Verify the functions exist:
+  ```sql
+  SELECT proname FROM pg_proc WHERE proname IN ('check_user_role', 'check_user_roles');
+  ```
 
 ### Issue: Signup email not received
 **Check:** Email settings in Supabase
