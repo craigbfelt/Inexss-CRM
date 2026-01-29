@@ -70,7 +70,7 @@ If you're experiencing "infinite recursion detected in policy for relation 'user
 - **Express Validator** for input validation
 
 ### Frontend
-- **Next.js 14** with App Router
+- **Next.js 16** with App Router
 - **React 18** with Hooks
 - **Framer Motion** for animations
 - **Lucide React** for beautiful icons

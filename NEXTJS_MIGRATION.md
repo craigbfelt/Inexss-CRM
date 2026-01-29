@@ -251,5 +251,15 @@ If you encounter any issues after the migration, please:
 ---
 
 **Migration Date:** January 29, 2026
-**Next.js Version:** 14.2.35
+**Next.js Version:** 16.1.6 (upgraded from 14.2.35 for security patches)
 **React Version:** 18.2.0
+
+## Security Notes
+
+The migration includes an upgrade to Next.js 16.1.6 which addresses multiple security vulnerabilities found in Next.js 14.x and 15.x versions, including:
+- DoS vulnerabilities in Server Actions and Image Optimization
+- Authorization bypass in middleware
+- Cache poisoning vulnerabilities
+- SSRF in middleware redirects
+
+All known security vulnerabilities have been patched in the current version.
