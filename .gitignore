@@ -11,8 +11,12 @@ client/node_modules/
 
 # Build outputs
 client/build/
+client/.next/
+client/out/
 dist/
 build/
+.next/
+out/
 
 # Logs
 logs/

@@ -1,18 +1,12 @@
 {
   "buildCommand": "cd client && npm run build",
-  "outputDirectory": "client/build",
+  "outputDirectory": "client/.next",
   "installCommand": "npm install --prefix client",
-  "framework": null,
-  "devCommand": "cd client && npm start",
+  "framework": "nextjs",
+  "devCommand": "cd client && npm run dev",
   "build": {
     "env": {
       "NODE_VERSION": "20.x"
     }
-  },
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
-  ]
+  }
 }
