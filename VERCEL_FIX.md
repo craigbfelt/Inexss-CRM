@@ -56,13 +56,16 @@ Added build scripts that disable CI mode (to prevent ESLint warnings from failin
 ```json
 {
   "scripts": {
-    "build": "CI=false react-scripts build",
-    "vercel-build": "CI=false react-scripts build"
+    "build": "cross-env CI=false react-scripts build",
+    "vercel-build": "cross-env CI=false react-scripts build"
+  },
+  "devDependencies": {
+    "cross-env": "^10.1.0"
   }
 }
 ```
 
-The `vercel-build` script is specifically used by Vercel's `@vercel/static-build` builder.
+The `vercel-build` script is specifically used by Vercel's `@vercel/static-build` builder. The `cross-env` package ensures cross-platform compatibility (works on Windows, macOS, and Linux).
 
 ### 3. Updated DEPLOYMENT.md
 Added comprehensive Vercel deployment instructions as the first deployment option.
