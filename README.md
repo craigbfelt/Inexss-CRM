@@ -277,7 +277,33 @@ Update the logo and company name in:
 - Check browser network tab for failed requests
 - Ensure Supabase tables have data
 
-For more troubleshooting help, see [`SUPABASE_MIGRATION.md`](./SUPABASE_MIGRATION.md) and [`supabase/README.md`](./supabase/README.md).
+For more troubleshooting help, see:
+- 📖 [**VERCEL_SETUP.md**](./VERCEL_SETUP.md) - Complete deployment guide
+- 📋 [**QUICK_DEPLOY.md**](./QUICK_DEPLOY.md) - Quick checklist for deployment
+- ⚙️ [**VERCEL_CONFIG.md**](./VERCEL_CONFIG.md) - Vercel dashboard configuration
+- 🔄 [**SUPABASE_MIGRATION.md**](./SUPABASE_MIGRATION.md) - Advanced migration details
+
+## 📚 Documentation
+
+This project includes comprehensive documentation:
+
+### Deployment Guides
+- **[VERCEL_SETUP.md](./VERCEL_SETUP.md)** ⭐ - Start here! Complete step-by-step guide for deploying to Vercel + Supabase
+- **[QUICK_DEPLOY.md](./QUICK_DEPLOY.md)** - Quick reference checklist for deployment (15 minutes)
+- **[VERCEL_CONFIG.md](./VERCEL_CONFIG.md)** - Detailed Vercel dashboard configuration reference
+- **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Legacy deployment options (Heroku, DigitalOcean, AWS)
+
+### Technical Documentation
+- **[SUPABASE_MIGRATION.md](./SUPABASE_MIGRATION.md)** - Database schema, migration from MongoDB, advanced setup
+- **[supabase/README.md](./supabase/README.md)** - Database schema documentation
+- **[supabase/schema.sql](./supabase/schema.sql)** - Complete database schema with RLS policies
+
+### Other Documentation
+- **[USER_GUIDE.md](./USER_GUIDE.md)** - End-user guide for using the CRM
+- **[PROJECT_SUMMARY.md](./PROJECT_SUMMARY.md)** - Project overview and features
+- **[SECURITY.md](./SECURITY.md)** - Security considerations and best practices
+- **[404_FIX.md](./404_FIX.md)** - Details on the custom 404 page implementation
+- **[VERCEL_FIX.md](./VERCEL_FIX.md)** - Historical context on Vercel deployment fixes
 
 ## 📚 Documentation
 
