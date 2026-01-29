@@ -106,7 +106,7 @@ From PostgreSQL documentation:
 
 ### Why This Matters
 
-RLS policies are evaluated **before** the actual UPDATE operation, so there's no "OLD" or "NEW" row available in that context. The pseudo-tables OLD and NEW are provided by the trigger system during trigger execution, not during policy evaluation.
+RLS policies and triggers use different mechanisms in PostgreSQL. The pseudo-tables OLD and NEW are **trigger-specific constructs** provided by the trigger system during trigger execution. They are not general row references available in other contexts like RLS policies. RLS policies can access row data through column references, but they cannot use the OLD and NEW pseudo-variables that are exclusive to triggers.
 
 ### Alternative Approaches Considered
 
