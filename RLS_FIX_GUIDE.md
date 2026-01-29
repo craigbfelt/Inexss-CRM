@@ -144,12 +144,30 @@ if (['admin', 'staff'].includes(user.role)) {
 
 ### Is This Less Secure?
 
-**No** - The security model is just as strong:
+**No** - The security model is appropriate for this use case, but **requires application-layer enforcement**:
 
+**Database Level (RLS):**
 1. **Users can only view their own record** - Others' data is protected
 2. **Users cannot escalate their own privileges** - role and is_active fields are locked
 3. **All operations require authentication** - No anonymous access
-4. **Admin operations use service_role key** - Dashboard or backend with elevated privileges
+
+**Application Level (React):**
+4. **Role-based features** - Menu items and UI elements filtered by role
+5. **Role-based operations** - Components check user.role before allowing actions
+6. **Proper implementation required** - Application must consistently check roles
+
+### ⚠️ Important Security Note
+
+This approach moves authorization from the database layer to the application layer. This means:
+
+✅ **Appropriate for:** Internal business applications with trusted users
+✅ **Requires:** Consistent role checks in all React components and API calls
+⚠️ **Consider:** Adding database-level role checks if you need defense-in-depth
+
+**For production systems with untrusted users**, consider implementing role-based RLS using one of these approaches:
+1. Store roles in JWT custom claims (accessed via auth.jwt())
+2. Use a separate authorized_users table without RLS
+3. Implement role checks at the API/backend layer with service_role key
 
 ### Admin Access to All Users
 

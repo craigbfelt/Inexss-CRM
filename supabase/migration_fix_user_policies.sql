@@ -18,16 +18,7 @@ DROP POLICY IF EXISTS "Admins can update users" ON public.users;
 -- Drop old SECURITY DEFINER functions that caused recursion
 DROP FUNCTION IF EXISTS public.check_user_role(text);
 DROP FUNCTION IF EXISTS public.check_user_roles(text[]);
-
--- Create a helper function for getting the current user's role
--- This can be called from application code, but NOT from RLS policies
-CREATE OR REPLACE FUNCTION public.get_my_role()
-RETURNS text AS $$
-  SELECT role FROM public.users WHERE id = auth.uid();
-$$ LANGUAGE sql SECURITY DEFINER SET search_path = public, pg_temp;
-
-GRANT EXECUTE ON FUNCTION public.get_my_role() TO authenticated;
-REVOKE EXECUTE ON FUNCTION public.get_my_role() FROM PUBLIC;
+DROP FUNCTION IF EXISTS public.get_my_role();
 
 -- Create NEW simplified policies that don't cause recursion
 CREATE POLICY "Users can view their own data" ON public.users
@@ -45,6 +36,8 @@ CREATE POLICY "Users can update their own profile" ON public.users
   );
 
 -- Drop and recreate policies on other tables to remove role checks
+DROP POLICY IF EXISTS "Anyone authenticated can view active brands" ON public.brands;
+DROP POLICY IF EXISTS "Authenticated users can view active brands" ON public.brands;
 DROP POLICY IF EXISTS "Admins can manage brands" ON public.brands;
 DROP POLICY IF EXISTS "Staff and admin can create clients" ON public.clients;
 DROP POLICY IF EXISTS "Staff and admin can update clients" ON public.clients;
@@ -55,9 +48,13 @@ DROP POLICY IF EXISTS "Admins can delete projects" ON public.projects;
 DROP POLICY IF EXISTS "Staff and admin can create meetings" ON public.meetings;
 DROP POLICY IF EXISTS "Staff and admin can update meetings" ON public.meetings;
 DROP POLICY IF EXISTS "Admins can delete meetings" ON public.meetings;
+DROP POLICY IF EXISTS "Authenticated users can view user_brand_access" ON public.user_brand_access;
 DROP POLICY IF EXISTS "Staff can manage project_brands" ON public.project_brands;
+DROP POLICY IF EXISTS "Authenticated users can view project_brands" ON public.project_brands;
 DROP POLICY IF EXISTS "Staff can manage brand_discussions" ON public.brand_discussions;
+DROP POLICY IF EXISTS "Authenticated users can view brand_discussions" ON public.brand_discussions;
 DROP POLICY IF EXISTS "Staff can manage action_items" ON public.action_items;
+DROP POLICY IF EXISTS "Authenticated users can view action_items" ON public.action_items;
 
 -- Create simplified management policies
 CREATE POLICY "Authenticated users can manage brands" ON public.brands

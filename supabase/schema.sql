@@ -200,28 +200,11 @@ CREATE TRIGGER update_action_items_updated_at BEFORE UPDATE ON public.action_ite
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- =====================================================
--- SECURITY DEFINER FUNCTIONS
--- =====================================================
--- These functions bypass RLS to prevent infinite recursion
--- NOTE: We cannot reliably use SECURITY DEFINER functions that query
--- the users table from within RLS policies on that same table.
--- Instead, we use simplified policies and handle complex authorization
--- in the application layer.
-
--- Function to safely get the current user's role from their own record
--- This works because it's called OUTSIDE of RLS policy evaluation
-CREATE OR REPLACE FUNCTION public.get_my_role()
-RETURNS text AS $$
-  SELECT role FROM public.users WHERE id = auth.uid();
-$$ LANGUAGE sql SECURITY DEFINER SET search_path = public, pg_temp;
-
--- Grant execute permission to authenticated users only
-GRANT EXECUTE ON FUNCTION public.get_my_role() TO authenticated;
-REVOKE EXECUTE ON FUNCTION public.get_my_role() FROM PUBLIC;
-
--- =====================================================
 -- ROW LEVEL SECURITY (RLS) POLICIES
 -- =====================================================
+-- Note: We do NOT use SECURITY DEFINER functions that query the users table
+-- from within RLS policies, as this causes infinite recursion. Instead, we use
+-- simple auth.uid() checks and handle role-based authorization in the application layer.
 
 -- Enable RLS on all tables
 ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
@@ -254,11 +237,7 @@ CREATE POLICY "Users can update their own profile" ON public.users
   );
 
 -- Brands table policies
--- Note: For operations that require role checks, we simplify to authenticated users
--- and handle role-based authorization in the application layer
-CREATE POLICY "Authenticated users can view active brands" ON public.brands
-  FOR SELECT USING (is_active = true AND auth.uid() IS NOT NULL);
-
+-- All authenticated users can manage brands (application handles role restrictions)
 CREATE POLICY "Authenticated users can manage brands" ON public.brands
   FOR ALL USING (auth.uid() IS NOT NULL);
 
@@ -283,27 +262,15 @@ CREATE POLICY "Authenticated users can view meetings" ON public.meetings
 CREATE POLICY "Authenticated users can manage meetings" ON public.meetings
   FOR ALL USING (auth.uid() IS NOT NULL);
 
--- Related tables policies (simplified for now)
-CREATE POLICY "Authenticated users can view user_brand_access" ON public.user_brand_access
-  FOR SELECT USING (auth.uid() IS NOT NULL);
-
+-- Related tables policies
 CREATE POLICY "Authenticated users can manage user_brand_access" ON public.user_brand_access
   FOR ALL USING (auth.uid() IS NOT NULL);
-
-CREATE POLICY "Authenticated users can view project_brands" ON public.project_brands
-  FOR SELECT USING (auth.uid() IS NOT NULL);
 
 CREATE POLICY "Authenticated users can manage project_brands" ON public.project_brands
   FOR ALL USING (auth.uid() IS NOT NULL);
 
-CREATE POLICY "Authenticated users can view brand_discussions" ON public.brand_discussions
-  FOR SELECT USING (auth.uid() IS NOT NULL);
-
 CREATE POLICY "Authenticated users can manage brand_discussions" ON public.brand_discussions
   FOR ALL USING (auth.uid() IS NOT NULL);
-
-CREATE POLICY "Authenticated users can view action_items" ON public.action_items
-  FOR SELECT USING (auth.uid() IS NOT NULL);
 
 CREATE POLICY "Authenticated users can manage action_items" ON public.action_items
   FOR ALL USING (auth.uid() IS NOT NULL);
