@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Package, Plus, Edit2, Trash2, Search, Filter, X, Globe, Mail, Phone } from 'lucide-react';
 import * as brandService from '../services/brandService';
 import './ClientsManager.css';
+import './BrandsManager.css';
 
 const BrandsManager = ({ user }) => {
   const [brands, setBrands] = useState([]);
@@ -14,6 +15,7 @@ const BrandsManager = ({ user }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('all');
   const [imageErrors, setImageErrors] = useState({});
+  const [openAccordions, setOpenAccordions] = useState({});
   const [formData, setFormData] = useState({
     name: '',
     category: '',
@@ -25,10 +27,19 @@ const BrandsManager = ({ user }) => {
     notes: '',
     image_url: '',
     logo_url: '',
+    brochures: [],
     is_active: true
   });
 
   const canEdit = ['admin', 'staff'].includes(user?.role);
+
+  const toggleAccordion = (brandId, section) => {
+    const key = `${brandId}-${section}`;
+    setOpenAccordions(prev => ({
+      ...prev,
+      [key]: !prev[key]
+    }));
+  };
 
   const handleImageError = (brandId, imageType) => {
     setImageErrors(prev => ({
@@ -253,143 +264,95 @@ const BrandsManager = ({ user }) => {
           filteredBrands.map((brand, index) => (
             <motion.div
               key={brand.id}
-              className="brand-card"
+              className="brand-card inexss-style"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: index * 0.05 }}
               whileHover={{ y: -5 }}
             >
-              {/* Brand Image Header */}
-              {brand.image_url && !hasImageError(brand.id, 'image') && (
-                <div 
-                  className="brand-image-header" 
-                  style={{
-                    backgroundImage: `url("${brand.image_url.replace(/"/g, '')}")`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    height: '180px',
-                    borderRadius: 'var(--radius-lg) var(--radius-lg) 0 0',
-                    marginBottom: '1rem',
-                    position: 'relative'
-                  }}
-                >
-                  {/* Preload image to detect errors */}
-                  <img 
-                    src={brand.image_url}
-                    alt=""
-                    style={{ display: 'none' }}
-                    onError={() => handleImageError(brand.id, 'image')}
-                  />
-                  
-                  {/* Logo overlay if available */}
-                  {brand.logo_url && !hasImageError(brand.id, 'logo') && (
-                    <div className="brand-logo-overlay">
-                      <img 
-                        src={brand.logo_url} 
-                        alt={`${brand.name} logo`}
-                        className="brand-logo-image"
-                        onError={() => handleImageError(brand.id, 'logo')}
-                      />
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* If no image but logo exists, show logo prominently */}
-              {(!brand.image_url || hasImageError(brand.id, 'image')) && brand.logo_url && !hasImageError(brand.id, 'logo') && (
-                <div className="brand-logo-standalone">
+              <div className="brand-card-inexss-inner">
+                {/* Logo at top */}
+                {brand.logo_url && !hasImageError(brand.id, 'logo') && (
                   <img 
                     src={brand.logo_url} 
                     alt={`${brand.name} logo`}
-                    className="brand-logo-image"
-                    style={{ maxWidth: '150px', maxHeight: '80px' }}
+                    className="inexss-logo-image"
                     onError={() => handleImageError(brand.id, 'logo')}
                   />
-                </div>
-              )}
-
-              <div className="brand-card-header" style={{ marginTop: brand.image_url ? '40px' : '0' }}>
-                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                  <span
-                    className="brand-category-badge"
-                    style={{ background: getCategoryColor(brand.category) }}
+                )}
+                
+                {/* Brand Image */}
+                {brand.image_url && !hasImageError(brand.id, 'image') && (
+                  <div className="inexss-image-container">
+                    <img 
+                      src={brand.image_url}
+                      alt={brand.name}
+                      className="inexss-uniform-image"
+                      onError={() => handleImageError(brand.id, 'image')}
+                    />
+                  </div>
+                )}
+                
+                {/* Brand Name as Link */}
+                {brand.website ? (
+                  <a 
+                    href={brand.website} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inexss-brand-name"
                   >
-                    {brand.category || 'Uncategorized'}
-                  </span>
-                  {brand.is_active === false && (
-                    <span
-                      className="brand-category-badge"
-                      style={{ 
-                        background: 'linear-gradient(135deg, #6b7280, #4b5563)',
-                        fontSize: '0.75rem'
-                      }}
-                    >
-                      Inactive
-                    </span>
-                  )}
-                </div>
-                {canEdit && (
-                  <div className="brand-actions">
-                    <button className="action-btn edit" onClick={() => handleEdit(brand)}>
-                      <Edit2 size={16} />
-                    </button>
-                    <button className="action-btn delete" onClick={() => handleDelete(brand.id)}>
-                      <Trash2 size={16} />
-                    </button>
-                  </div>
+                    {brand.name}
+                  </a>
+                ) : (
+                  <h3 className="inexss-brand-name">{brand.name}</h3>
                 )}
-              </div>
-
-              <div className="brand-info">
-                <h3>{brand.name}</h3>
-
+                
+                {/* Description */}
                 {brand.description && (
-                  <p style={{ color: 'var(--gray-600)', fontSize: '0.95rem', marginBottom: '1rem', lineHeight: '1.5' }}>
-                    {brand.description}
-                  </p>
+                  <p className="inexss-brand-description">{brand.description}</p>
                 )}
-
-                {brand.contact_name && (
-                  <div className="info-row">
-                    <Mail size={16} />
-                    <span>{brand.contact_name}</span>
+                
+                {/* Brochures Accordion */}
+                {brand.notes && (
+                  <div className="inexss-accordions-container">
+                    <div className="inexss-accordion-item">
+                      <div 
+                        className="inexss-accordion-header"
+                        onClick={() => toggleAccordion(brand.id, 'brochures')}
+                      >
+                        Brochures {openAccordions[`${brand.id}-brochures`] ? '−' : '+'}
+                      </div>
+                      {openAccordions[`${brand.id}-brochures`] && (
+                        <div className="inexss-accordion-content">
+                          <div style={{ whiteSpace: 'pre-wrap', fontSize: '0.875rem' }}>
+                            {brand.notes}
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )}
-
-                {brand.contact_email && (
-                  <div className="info-row">
-                    <Mail size={16} />
-                    <span>{brand.contact_email}</span>
-                  </div>
-                )}
-
-                {brand.contact_phone && (
-                  <div className="info-row">
-                    <Phone size={16} />
-                    <span>{brand.contact_phone}</span>
-                  </div>
-                )}
-
-                {brand.website && (
-                  <div className="info-row">
-                    <Globe size={16} />
-                    <a
-                      href={brand.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ color: 'var(--primary)', textDecoration: 'none' }}
+                
+                {/* Edit/Delete buttons for admins */}
+                {canEdit && (
+                  <div className="inexss-admin-actions">
+                    <button 
+                      className="action-btn edit" 
+                      onClick={() => handleEdit(brand)}
+                      title="Edit Brand"
                     >
-                      Visit Website
-                    </a>
+                      <Edit2 size={14} />
+                    </button>
+                    <button 
+                      className="action-btn delete" 
+                      onClick={() => handleDelete(brand.id)}
+                      title="Delete Brand"
+                    >
+                      <Trash2 size={14} />
+                    </button>
                   </div>
                 )}
               </div>
-
-              {brand.notes && (
-                <div className="brand-notes">
-                  {brand.notes}
-                </div>
-              )}
             </motion.div>
           ))
         )}
