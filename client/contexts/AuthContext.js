@@ -53,6 +53,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const profile = await getUserProfile(userId);
       setUser(profile);
+      setLoading(false);
     } catch (error) {
       console.error('Failed to fetch user profile:', error);
       
