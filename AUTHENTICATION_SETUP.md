@@ -16,6 +16,23 @@ This guide provides a quick checklist for setting up authentication correctly wi
 
 ## Quick Setup Checklist
 
+### 0. Enable Email Authentication Provider ⚠️ CRITICAL
+
+**Location:** Supabase Dashboard → Authentication → Providers
+
+**This is the most common issue - if skipped, users will see "email logins are disabled"**
+
+1. Go to your Supabase project dashboard
+2. Navigate to **Authentication** → **Providers**
+3. Find **Email** in the list of authentication providers
+4. Toggle it **ON** to enable
+5. Configure settings:
+   - **Confirm email**: Enable for production (optional for testing)
+   - **Secure email change**: Enable (recommended)
+6. Click **Save**
+
+> **Important:** Without this step, users cannot log in with email/password, even if all other configuration is correct.
+
 ### 1. Configure Supabase URLs
 
 **Location:** Supabase Dashboard → Authentication → URL Configuration
@@ -123,11 +140,22 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY = eyJhbGc...
 - Make sure to include the `/**` wildcard pattern
 - Format should be: `https://your-app.vercel.app/**`
 
+### "Email logins are disabled" error
+- Go to Supabase Dashboard → Authentication → Providers
+- Find "Email" and ensure it's toggled ON
+- Click Save after enabling
+- See [`EMAIL_LOGIN_FIX.md`](./EMAIL_LOGIN_FIX.md) for detailed instructions
+
 ---
 
 ## Configuration Checklist
 
 Use this checklist to verify everything is configured correctly:
+
+**Supabase - Authentication Providers:**
+- [ ] Email provider is enabled (Authentication → Providers → Email → ON)
+- [ ] Email provider settings saved successfully
+- [ ] "Confirm email" setting matches your needs
 
 **Supabase - URL Configuration:**
 - [ ] Site URL is set to Vercel production URL (e.g., `https://your-app.vercel.app`)

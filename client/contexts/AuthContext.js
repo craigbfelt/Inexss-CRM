@@ -2,6 +2,7 @@
 
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { supabase, signIn, signOut, getUserProfile, isSupabaseConfigured } from '../lib/supabase';
+import { getAuthErrorMessage } from '../utils/errorHelpers';
 
 const AuthContext = createContext(null);
 
@@ -125,9 +126,13 @@ export const AuthProvider = ({ children }) => {
       return { success: true };
     } catch (error) {
       console.error('Login error:', error);
+      
+      // Use shared utility to get user-friendly error message
+      const errorMessage = getAuthErrorMessage(error);
+      
       return { 
         success: false, 
-        error: error.message || 'Login failed' 
+        error: errorMessage
       };
     }
   };
