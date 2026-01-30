@@ -48,11 +48,11 @@ Use this checklist to deploy your Inexss CRM to Vercel + Supabase in under 15 mi
 - [ ] Go to [vercel.com/new](https://vercel.com/new)
 - [ ] Click "Import Git Repository"
 - [ ] Select `craigbfelt/Inexss-CRM`
-- [ ] Verify settings (auto-detected from vercel.json):
-  - Framework: Other
-  - Root Directory: `./`
-  - Build Command: `cd client && npm install && npm run build`
-  - Output Directory: `client/build`
+- [ ] **CRITICAL:** Set build settings:
+  - Framework: **Next.js**
+  - Root Directory: **`client`** (REQUIRED - must be "client", not "./")
+  - Build Command: `npm run build` (auto-detected)
+  - Output Directory: `.next` (auto-detected)
 
 ### 2.2 Add Environment Variables
 - [ ] Click "Environment Variables" section

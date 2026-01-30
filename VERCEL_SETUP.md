@@ -115,13 +115,15 @@ You need to create an admin user to log in:
 
 ### Step 2: Configure Build Settings
 
-Vercel should auto-detect the settings from `vercel.json`, but verify:
+**CRITICAL:** Set the Root Directory to detect Next.js properly:
 
 - **Framework Preset**: Next.js
-- **Root Directory**: `./` (leave as root)
-- **Build Command**: `cd client && npm run build`
-- **Output Directory**: `client/.next` (Next.js build output)
-- **Install Command**: `npm install --prefix client`
+- **Root Directory**: `client` (REQUIRED - set to "client", not "./")
+- **Build Command**: `npm run build` (auto-detected)
+- **Output Directory**: `.next` (auto-detected for Next.js)
+- **Install Command**: `npm install` (auto-detected)
+
+> **Important:** Setting Root Directory to `client` is essential for Vercel to detect the Next.js version in the subdirectory. Without this, you'll see "No Next.js version detected" errors.
 
 ### Step 3: Add Environment Variables
 
@@ -147,13 +149,13 @@ Before deploying, add your Supabase credentials:
 1. Click **"Deploy"**
 2. Vercel will:
    - Clone your repository
-   - Install dependencies (using Node.js 20.x as configured in vercel.json)
-   - Build the React app
+   - Install dependencies (using Node.js 20.x)
+   - Build the Next.js app
    - Deploy to their CDN
 3. Wait 2-5 minutes for the deployment to complete
 4. Once done, you'll see **"Congratulations!"** with your deployment URL
 
-**Note:** The app uses Supabase packages that require Node.js 20.x or higher. This is automatically configured in `vercel.json`.
+**Note:** The app uses Supabase packages that require Node.js 20.x or higher. This is configured in `client/vercel.json`.
 
 ### Step 5: Update Supabase Redirect URLs ⚠️ CRITICAL
 
@@ -338,13 +340,13 @@ To run the app locally:
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
    ```
 
-   > **Note**: For local development, you can also use `REACT_APP_*` prefixed variables if preferred.
+   > **Note**: Use `NEXT_PUBLIC_*` prefixed variables for Next.js applications.
 
 3. Install dependencies and start:
    ```bash
    cd client
    npm install
-   npm start
+   npm run dev
    ```
 
 4. Open `http://localhost:3000` in your browser
