@@ -89,11 +89,19 @@ If you're experiencing "infinite recursion detected in policy for relation 'user
 
 **This application is designed to run on Vercel + Supabase cloud infrastructure.**
 
-### ⚠️ Common Issue: "No Next.js version detected"
+### ⚠️ CRITICAL: Vercel Root Directory Must Be Set to `client`
 
-If you see this error when deploying to Vercel, you need to set the **Root Directory to `client`** in Vercel settings.
+**If you see this error when deploying to Vercel:**
+```
+No Next.js version detected. Make sure your package.json has "next" 
+in either "dependencies" or "devDependencies".
+```
 
-📖 **Quick Fix:** See [`VERCEL_ROOT_DIRECTORY.md`](./VERCEL_ROOT_DIRECTORY.md) for detailed instructions.
+**Solution:** You MUST set the **Root Directory to `client`** in Vercel project settings.
+
+📖 **Quick Fix Guide:** [`VERCEL.md`](./VERCEL.md) - Complete instructions for setting Root Directory
+
+📖 **Detailed Setup:** [`VERCEL_ROOT_DIRECTORY.md`](./VERCEL_ROOT_DIRECTORY.md) - Why this is required
 
 ### Option 1: Deploy to Cloud (Recommended) ⭐
 
