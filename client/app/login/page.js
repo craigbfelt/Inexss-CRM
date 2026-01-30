@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import { LogIn, Sparkles, Building2, Users, TrendingUp } from 'lucide-react';
@@ -8,6 +9,7 @@ import ConfigurationError from '../../components/ConfigurationError';
 import './Login.css';
 
 const Login = () => {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -43,8 +45,11 @@ const Login = () => {
 
     if (!result.success) {
       setError(result.error);
+      setLoading(false);
+    } else {
+      // Redirect to dashboard on successful login
+      router.push('/dashboard');
     }
-    setLoading(false);
   };
 
   const handleChange = (e) => {
