@@ -140,6 +140,47 @@
   overflow: hidden;
 }
 
+/* Brand card with image needs no padding at top */
+.brand-card.has-image {
+  padding-top: 0;
+}
+
+/* Brand Image Header Styles */
+.brand-image-header {
+  margin: -1.5rem -1.5rem 1rem -1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.brand-logo-overlay {
+  position: absolute;
+  bottom: -30px;
+  left: 20px;
+  width: 80px;
+  height: 80px;
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 10px;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.brand-logo-standalone {
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.brand-logo-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
 .client-card::before,
 .brand-card::before,
 .project-card::before {
@@ -150,6 +191,7 @@
   width: 100%;
   height: 4px;
   background: var(--gradient-sunset);
+  z-index: 1;
 }
 
 .client-card:hover,
