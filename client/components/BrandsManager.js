@@ -316,7 +316,7 @@ const BrandsManager = ({ user }) => {
                   >
                     {brand.category || 'Uncategorized'}
                   </span>
-                  {!brand.is_active && (
+                  {brand.is_active === false && (
                     <span
                       className="brand-category-badge"
                       style={{ 
