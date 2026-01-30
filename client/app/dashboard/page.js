@@ -10,6 +10,11 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import ClientsManager from '../../components/ClientsManager';
+import MeetingsManager from '../../components/MeetingsManager';
+import ProjectsManager from '../../components/ProjectsManager';
+import BrandsManager from '../../components/BrandsManager';
+import ReportsManager from '../../components/ReportsManager';
+import SettingsManager from '../../components/SettingsManager';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -357,62 +362,17 @@ const OverviewContent = ({ user }) => {
   );
 };
 
-// Placeholder components for other tabs
-const MeetingsContent = ({ user }) => (
-  <div className="placeholder-content">
-    <h2>Meetings Management</h2>
-    <p>Track and manage all your client meetings here.</p>
-    {['contractor'].includes(user?.role) && (
-      <div className="info-banner">
-        <p>📝 As a contractor, you can view your own meetings and related information.</p>
-      </div>
-    )}
-  </div>
-);
+// Content components for tabs
+const MeetingsContent = ({ user }) => <MeetingsManager user={user} />;
 
 const ClientsContent = ({ user }) => <ClientsManager user={user} />;
 
-const ProjectsContent = ({ user }) => (
-  <div className="placeholder-content">
-    <h2>Projects Overview</h2>
-    <p>View and track all your building projects.</p>
-    {user?.role === 'contractor' && (
-      <div className="info-banner">
-        <p>🏗️ You can view projects you're involved with.</p>
-      </div>
-    )}
-    {user?.role === 'supplier' && (
-      <div className="info-banner">
-        <p>📦 You can view projects related to your supplied brands.</p>
-      </div>
-    )}
-  </div>
-);
+const ProjectsContent = ({ user }) => <ProjectsManager user={user} />;
 
-const BrandsContent = ({ user }) => (
-  <div className="placeholder-content">
-    <h2>Brand Management</h2>
-    <p>Manage your 15+ brand relationships and product lines.</p>
-    {user?.role === 'supplier' && (
-      <div className="info-banner">
-        <p>📦 You can view information for your supplied brands only.</p>
-      </div>
-    )}
-  </div>
-);
+const BrandsContent = ({ user }) => <BrandsManager user={user} />;
 
-const ReportsContent = () => (
-  <div className="placeholder-content">
-    <h2>Reports & Analytics</h2>
-    <p>Generate monthly reports and view performance analytics.</p>
-  </div>
-);
+const ReportsContent = ({ user }) => <ReportsManager user={user} />;
 
-const SettingsContent = () => (
-  <div className="placeholder-content">
-    <h2>Settings</h2>
-    <p>Manage your account settings and preferences.</p>
-  </div>
-);
+const SettingsContent = ({ user }) => <SettingsManager user={user} />;
 
 export default Dashboard;

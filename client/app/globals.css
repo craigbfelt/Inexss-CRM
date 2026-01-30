@@ -230,14 +230,37 @@ code {
 }
 
 .btn-secondary {
-  background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
-  color: white;
+  background: linear-gradient(135deg, var(--gray-200), var(--gray-300));
+  color: var(--gray-700);
   box-shadow: var(--shadow-md);
 }
 
 .btn-secondary:hover {
+  background: linear-gradient(135deg, var(--gray-300), var(--gray-400));
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, var(--danger), #dc2626);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+.btn-danger:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.btn:disabled:hover {
+  transform: none !important;
+  box-shadow: var(--shadow-md) !important;
 }
 
 .btn-success {
@@ -295,7 +318,16 @@ code {
 }
 
 /* Input Styles */
-.input {
+.input,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="url"],
+input[type="number"],
+input[type="date"],
+textarea,
+select {
   width: 100%;
   padding: 0.875rem 1rem;
   font-size: 1rem;
@@ -303,15 +335,21 @@ code {
   border-radius: var(--radius-md);
   transition: all var(--transition-base);
   background: white;
+  font-family: inherit;
 }
 
-.input:focus {
+.input:focus,
+input:focus,
+textarea:focus,
+select:focus {
   outline: none;
   border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
-.input::placeholder {
+.input::placeholder,
+input::placeholder,
+textarea::placeholder {
   color: var(--gray-400);
 }
 
