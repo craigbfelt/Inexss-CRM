@@ -21,22 +21,29 @@ const BrandsManager = ({ user }) => {
     contact_email: '',
     contact_phone: '',
     website: '',
-    notes: ''
+    notes: '',
+    image_url: '',
+    logo_url: ''
   });
 
   const canEdit = ['admin', 'staff'].includes(user?.role);
 
   const categories = [
-    'Windows & Doors',
+    'Building Products',
+    'Acoustics',
+    'Automation',
     'Security',
-    'Roofing',
-    'Flooring',
+    'Insulation',
+    'Blinds & Shutters',
     'Lighting',
+    'Stone & Surfaces',
+    'Interior Design',
     'Plumbing',
-    'HVAC',
-    'Electrical',
-    'Building Materials',
-    'Finishes',
+    'Wood Finishes',
+    'Wallcoverings',
+    'Furniture',
+    'Flooring',
+    'Bathware',
     'Other'
   ];
 
@@ -85,7 +92,9 @@ const BrandsManager = ({ user }) => {
       contact_email: brand.contact_email || '',
       contact_phone: brand.contact_phone || '',
       website: brand.website || '',
-      notes: brand.notes || ''
+      notes: brand.notes || '',
+      image_url: brand.image_url || '',
+      logo_url: brand.logo_url || ''
     });
     setShowModal(true);
   };
@@ -111,22 +120,29 @@ const BrandsManager = ({ user }) => {
       contact_email: '',
       contact_phone: '',
       website: '',
-      notes: ''
+      notes: '',
+      image_url: '',
+      logo_url: ''
     });
   };
 
   const getCategoryColor = (category) => {
     const colors = {
-      'Windows & Doors': 'linear-gradient(135deg, #667eea, #764ba2)',
+      'Building Products': 'linear-gradient(135deg, #667eea, #764ba2)',
+      'Acoustics': 'linear-gradient(135deg, #fa709a, #fee140)',
+      'Automation': 'linear-gradient(135deg, #4facfe, #00f2fe)',
       'Security': 'linear-gradient(135deg, #f093fb, #f5576c)',
-      'Roofing': 'linear-gradient(135deg, #4facfe, #00f2fe)',
-      'Flooring': 'linear-gradient(135deg, #43e97b, #38f9d7)',
-      'Lighting': 'linear-gradient(135deg, #feca57, #ff9ff3)',
-      'Plumbing': 'linear-gradient(135deg, #54a0ff, #2e86de)',
-      'HVAC': 'linear-gradient(135deg, #48dbfb, #0abde3)',
-      'Electrical': 'linear-gradient(135deg, #feca57, #ee5a6f)',
-      'Building Materials': 'linear-gradient(135deg, #c7ecee, #778beb)',
-      'Finishes': 'linear-gradient(135deg, #ff6b6b, #ee5a6f)',
+      'Insulation': 'linear-gradient(135deg, #c7ecee, #778beb)',
+      'Blinds & Shutters': 'linear-gradient(135deg, #feca57, #ff9ff3)',
+      'Lighting': 'linear-gradient(135deg, #feca57, #ee5a6f)',
+      'Stone & Surfaces': 'linear-gradient(135deg, #54a0ff, #2e86de)',
+      'Interior Design': 'linear-gradient(135deg, #ff6b6b, #ee5a6f)',
+      'Plumbing': 'linear-gradient(135deg, #48dbfb, #0abde3)',
+      'Wood Finishes': 'linear-gradient(135deg, #d4a373, #8b6f47)',
+      'Wallcoverings': 'linear-gradient(135deg, #fa709a, #fee140)',
+      'Furniture': 'linear-gradient(135deg, #43e97b, #38f9d7)',
+      'Flooring': 'linear-gradient(135deg, #d4a373, #a67c52)',
+      'Bathware': 'linear-gradient(135deg, #48dbfb, #4facfe)',
       'Other': 'linear-gradient(135deg, #6b7280, #4b5563)'
     };
     return colors[category] || colors['Other'];
@@ -228,7 +244,68 @@ const BrandsManager = ({ user }) => {
               transition={{ delay: index * 0.05 }}
               whileHover={{ y: -5 }}
             >
-              <div className="brand-card-header">
+              {/* Brand Image Header */}
+              {brand.image_url && (
+                <div className="brand-image-header" style={{
+                  backgroundImage: `url(${brand.image_url})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  height: '180px',
+                  borderRadius: 'var(--radius-lg) var(--radius-lg) 0 0',
+                  marginBottom: '1rem',
+                  position: 'relative'
+                }}>
+                  {/* Logo overlay if available */}
+                  {brand.logo_url && (
+                    <div style={{
+                      position: 'absolute',
+                      bottom: '-30px',
+                      left: '20px',
+                      width: '80px',
+                      height: '80px',
+                      background: 'white',
+                      borderRadius: 'var(--radius-lg)',
+                      padding: '10px',
+                      boxShadow: 'var(--shadow-lg)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      <img 
+                        src={brand.logo_url} 
+                        alt={`${brand.name} logo`}
+                        style={{ 
+                          maxWidth: '100%', 
+                          maxHeight: '100%',
+                          objectFit: 'contain'
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* If no image but logo exists, show logo prominently */}
+              {!brand.image_url && brand.logo_url && (
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  padding: '1rem',
+                  marginBottom: '1rem'
+                }}>
+                  <img 
+                    src={brand.logo_url} 
+                    alt={`${brand.name} logo`}
+                    style={{ 
+                      maxWidth: '150px',
+                      maxHeight: '80px',
+                      objectFit: 'contain'
+                    }}
+                  />
+                </div>
+              )}
+
+              <div className="brand-card-header" style={{ marginTop: brand.image_url ? '40px' : '0' }}>
                 <span
                   className="brand-category-badge"
                   style={{ background: getCategoryColor(brand.category) }}
@@ -389,16 +466,6 @@ const BrandsManager = ({ user }) => {
 
                 <div className="form-row">
                   <div className="form-group">
-                    <label>Contact Phone</label>
-                    <input
-                      type="tel"
-                      value={formData.contact_phone}
-                      onChange={(e) => setFormData({ ...formData, contact_phone: e.target.value })}
-                      placeholder="e.g., +27 11 123 4567"
-                    />
-                  </div>
-
-                  <div className="form-group">
                     <label>Website</label>
                     <input
                       type="url"
@@ -406,6 +473,34 @@ const BrandsManager = ({ user }) => {
                       onChange={(e) => setFormData({ ...formData, website: e.target.value })}
                       placeholder="https://www.brand.com"
                     />
+                  </div>
+                </div>
+
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Brand Image URL</label>
+                    <input
+                      type="url"
+                      value={formData.image_url}
+                      onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+                      placeholder="https://example.com/brand-image.jpg"
+                    />
+                    <small style={{ color: 'var(--gray-500)', fontSize: '0.85rem', marginTop: '0.25rem', display: 'block' }}>
+                      Header/banner image for the brand card
+                    </small>
+                  </div>
+
+                  <div className="form-group">
+                    <label>Brand Logo URL</label>
+                    <input
+                      type="url"
+                      value={formData.logo_url}
+                      onChange={(e) => setFormData({ ...formData, logo_url: e.target.value })}
+                      placeholder="https://example.com/brand-logo.png"
+                    />
+                    <small style={{ color: 'var(--gray-500)', fontSize: '0.85rem', marginTop: '0.25rem', display: 'block' }}>
+                      Logo image for the brand
+                    </small>
                   </div>
                 </div>
 
