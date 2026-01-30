@@ -40,16 +40,18 @@ Ensure you have properly configured:
    ```
    https://your-app.vercel.app
    ```
-   - This should be your production Vercel URL
-   - NOT `http://localhost:3000` (unless testing locally)
+   - This should be your **production Vercel URL only**
+   - Do NOT use `http://localhost:3000` for the Site URL (even when testing)
+   - The Site URL is used in authentication emails and redirects
 
 2. **Redirect URLs**:
    ```
    https://your-app.vercel.app/**
    http://localhost:3000/**
    ```
-   - Add both production and local development URLs
-   - The `**` wildcard is important
+   - Add **both** production and local development URLs
+   - Site URL (production only) vs Redirect URLs (production + local)
+   - The `**` wildcard is required to allow all paths
 
 #### Email Templates (Authentication → Email Templates)
 
@@ -192,13 +194,14 @@ If you don't have any users yet and need to create an admin user:
 Run this SQL in Supabase → SQL Editor:
 
 ```sql
--- This will create both auth user and public profile
+-- This will create the public profile only
 -- Replace email, password, and name with your values
 
--- Insert into auth.users is not directly possible via SQL
--- Use the dashboard method instead (Option 1 above)
+-- Note: Creating auth users directly via SQL is not recommended.
+-- The auth.users table requires proper password hashing and security.
+-- Use the dashboard method (Option 1 above) to create the auth user first.
 
--- After creating user in dashboard, create profile:
+-- After creating user via dashboard, create the public profile:
 INSERT INTO public.users (id, email, name, role, location, is_active)
 VALUES (
   'UUID-from-auth-users-table',  -- Replace with actual UUID

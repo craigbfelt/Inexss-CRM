@@ -129,10 +129,11 @@ export const AuthProvider = ({ children }) => {
       // Provide more helpful error messages for common issues
       let errorMessage = error.message || 'Login failed';
       
-      // Check for email provider disabled error
-      if (errorMessage.toLowerCase().includes('email') && 
-          (errorMessage.toLowerCase().includes('disabled') || 
-           errorMessage.toLowerCase().includes('provider'))) {
+      // Check for specific Supabase error messages about email authentication
+      // Supabase returns specific messages when auth providers are disabled
+      if (errorMessage.includes('Email signups are disabled') || 
+          errorMessage.includes('Email logins are disabled') ||
+          errorMessage.includes('Email authentication is disabled')) {
         errorMessage = 'Email login is currently disabled. Please enable the Email authentication provider in your Supabase dashboard (Authentication → Providers → Email). See EMAIL_LOGIN_FIX.md for detailed instructions.';
       }
       // Check for invalid credentials

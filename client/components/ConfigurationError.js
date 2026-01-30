@@ -3,12 +3,19 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-const ConfigurationError = ({ message }) => {
-  // Check if this is an email provider configuration error
-  const isEmailProviderError = message && (
-    message.toLowerCase().includes('email') && 
-    (message.toLowerCase().includes('disabled') || message.toLowerCase().includes('provider'))
+// Helper function to detect email provider configuration errors
+const isEmailProviderError = (message) => {
+  if (!message) return false;
+  const lowerMsg = message.toLowerCase();
+  return (
+    lowerMsg.includes('email signups are disabled') ||
+    lowerMsg.includes('email logins are disabled') ||
+    lowerMsg.includes('email authentication is disabled')
   );
+};
+
+const ConfigurationError = ({ message }) => {
+  const showEmailProviderHelp = isEmailProviderError(message);
 
   return (
     <motion.div 
@@ -16,7 +23,7 @@ const ConfigurationError = ({ message }) => {
         background: 'white',
         borderRadius: '1rem',
         padding: '2rem',
-        maxWidth: isEmailProviderError ? '600px' : '500px',
+        maxWidth: showEmailProviderHelp ? '600px' : '500px',
         boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
         textAlign: 'center'
       }}
@@ -38,7 +45,7 @@ const ConfigurationError = ({ message }) => {
         fontSize: '0.875rem',
         color: '#4b5563'
       }}>
-        {isEmailProviderError ? (
+        {showEmailProviderHelp ? (
           <>
             <strong>🔧 Quick Fix for Email Login Issue:</strong>
             <ol style={{ marginTop: '0.5rem', paddingLeft: '1.25rem', lineHeight: '1.8' }}>
