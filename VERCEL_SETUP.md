@@ -340,13 +340,13 @@ To run the app locally:
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
    ```
 
-   > **Note**: For local development, you can also use `REACT_APP_*` prefixed variables if preferred.
+   > **Note**: Use `NEXT_PUBLIC_*` prefixed variables for Next.js applications.
 
 3. Install dependencies and start:
    ```bash
    cd client
    npm install
-   npm start
+   npm run dev
    ```
 
 4. Open `http://localhost:3000` in your browser

@@ -72,7 +72,7 @@ Add these in: **Settings** → **Environment Variables**
   - ✅ Preview
   - ✅ Development
 
-> **Note**: The app automatically maps `NEXT_PUBLIC_*` variables to `REACT_APP_*` during the build process.
+> **Note**: This Next.js app uses `NEXT_PUBLIC_*` prefixed environment variables, which are automatically exposed to the browser.
 
 ## Git Integration
 
