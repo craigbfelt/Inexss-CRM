@@ -125,9 +125,25 @@ export const AuthProvider = ({ children }) => {
       return { success: true };
     } catch (error) {
       console.error('Login error:', error);
+      
+      // Provide more helpful error messages for common issues
+      let errorMessage = error.message || 'Login failed';
+      
+      // Check for email provider disabled error
+      if (errorMessage.toLowerCase().includes('email') && 
+          (errorMessage.toLowerCase().includes('disabled') || 
+           errorMessage.toLowerCase().includes('provider'))) {
+        errorMessage = 'Email login is currently disabled. Please enable the Email authentication provider in your Supabase dashboard (Authentication → Providers → Email). See EMAIL_LOGIN_FIX.md for detailed instructions.';
+      }
+      // Check for invalid credentials
+      else if (errorMessage.toLowerCase().includes('invalid') && 
+               errorMessage.toLowerCase().includes('credentials')) {
+        errorMessage = 'Invalid email or password. Please check your credentials and try again.';
+      }
+      
       return { 
         success: false, 
-        error: error.message || 'Login failed' 
+        error: errorMessage
       };
     }
   };

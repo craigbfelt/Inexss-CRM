@@ -4,7 +4,20 @@ A comprehensive, visually stunning CRM system designed specifically for Inexx Sp
 
 ## ⚠️ Important: Database Setup & Known Issues
 
-### Signup Row-Level Security Fix (Latest)
+### Email Login Disabled Error (Common Issue) 🔐
+
+If users are getting **"email logins are disabled"** error when trying to log in:
+
+**✅ Quick Fix:** Enable the Email authentication provider in Supabase Dashboard
+
+1. Go to [Supabase Dashboard](https://app.supabase.com) → Your Project
+2. Navigate to **Authentication** → **Providers**
+3. Find **Email** and toggle it **ON**
+4. Click **Save**
+
+📖 **Full Guide:** See [`EMAIL_LOGIN_FIX.md`](./EMAIL_LOGIN_FIX.md) for complete step-by-step instructions, troubleshooting, and user creation.
+
+### Signup Row-Level Security Fix
 
 If users are getting "new row violates row-level security policy for table 'users'" when signing up:
 
