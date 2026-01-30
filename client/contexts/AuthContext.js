@@ -54,7 +54,6 @@ export const AuthProvider = ({ children }) => {
     try {
       const profile = await getUserProfile(userId);
       setUser(profile);
-      setLoading(false);
     } catch (error) {
       console.error('Failed to fetch user profile:', error);
       
@@ -68,7 +67,6 @@ export const AuthProvider = ({ children }) => {
       if (!isMissingProfile) {
         // If it's a different error (network, permissions, etc), don't try to auto-create
         setUser(null);
-        setLoading(false);
         return;
       }
       
