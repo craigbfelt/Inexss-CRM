@@ -1,8 +1,10 @@
+'use client';
+
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 import { LogIn, Sparkles, Building2, Users, TrendingUp } from 'lucide-react';
-import ConfigurationError from '../components/ConfigurationError';
+import ConfigurationError from '../../components/ConfigurationError';
 import './Login.css';
 
 const Login = () => {

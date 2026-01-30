@@ -1,3 +1,5 @@
+'use client';
+
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { supabase, signIn, signOut, getUserProfile, isSupabaseConfigured } from '../lib/supabase';
 
@@ -12,7 +14,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     // Check if Supabase is configured
     if (!isSupabaseConfigured) {
-      setConfigError('Missing Supabase configuration. Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY environment variables (these are automatically mapped to REACT_APP_* during build).');
+      setConfigError('Missing Supabase configuration. Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY environment variables.');
       setLoading(false);
       return;
     }
@@ -84,8 +86,7 @@ export const AuthProvider = ({ children }) => {
               location: authUser.user_metadata?.location || 'Other',
               is_active: true
             }], {
-              onConflict: 'id',
-              ignoreDuplicates: true  // Don't overwrite existing profiles
+              onConflict: 'id'
             })
             .select()
             .single();

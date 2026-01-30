@@ -1,19 +1,50 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Home, Users, Building2, Calendar, BarChart3, Package, 
   Settings, LogOut, Menu, X, Sparkles, TrendingUp,
   UserCircle, Bell, Search
 } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
-import ClientsManager from '../components/ClientsManager';
+import { useAuth } from '../../contexts/AuthContext';
+import ClientsManager from '../../components/ClientsManager';
 import './Dashboard.css';
 
 const Dashboard = () => {
-  const { user, logout } = useAuth();
+  const router = useRouter();
+  const { user, logout, loading } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState('overview');
   const [showNotifications, setShowNotifications] = useState(false);
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/login');
+    }
+  }, [user, loading, router]);
+
+  // Show loading state while checking authentication
+  if (loading) {
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh',
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+      }}>
+        <div className="spinner" style={{ borderColor: 'rgba(255,255,255,0.3)', borderTopColor: 'white' }}></div>
+      </div>
+    );
+  }
+
+  // Don't render dashboard if not authenticated
+  if (!user) {
+    return null;
+  }
 
   const menuItems = [
     { id: 'overview', label: 'Overview', icon: Home, roles: ['admin', 'staff', 'brand_representative', 'contractor', 'supplier'] },

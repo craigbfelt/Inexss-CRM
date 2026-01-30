@@ -117,10 +117,10 @@ You need to create an admin user to log in:
 
 Vercel should auto-detect the settings from `vercel.json`, but verify:
 
-- **Framework Preset**: Other (or Create React App)
+- **Framework Preset**: Next.js
 - **Root Directory**: `./` (leave as root)
 - **Build Command**: `cd client && npm run build`
-- **Output Directory**: `client/build`
+- **Output Directory**: `client/.next` (Next.js build output)
 - **Install Command**: `npm install --prefix client`
 
 ### Step 3: Add Environment Variables
@@ -140,7 +140,7 @@ Before deploying, add your Supabase credentials:
    - **Value**: Your Supabase anon public key (from Part 1, Step 3)
    - **Environment**: Check all: Production, Preview, Development
 
-> **Note**: The app uses `NEXT_PUBLIC_*` prefixed environment variables (Vercel/Next.js convention). These are automatically mapped to `REACT_APP_*` during the build process for Create React App compatibility.
+> **Note**: The app uses `NEXT_PUBLIC_*` prefixed environment variables (Vercel/Next.js convention).
 
 ### Step 4: Deploy
 
@@ -244,9 +244,9 @@ Before testing your deployment, verify these critical configurations are correct
 #### Issue: "404 Page Not Found" on Vercel
 
 **Solutions:**
-- Ensure `vercel.json` has the correct rewrites configuration
 - Check that the build completed successfully in Vercel dashboard → Deployments
-- Verify the output directory is `client/build`
+- Verify the output directory is `client/.next` (Next.js build output)
+- Ensure environment variables are set correctly
 
 #### Issue: "Missing Supabase environment variables"
 
@@ -381,7 +381,7 @@ To manually trigger a redeploy:
 | `NEXT_PUBLIC_SUPABASE_URL` | Your Supabase project URL | `https://xxxxx.supabase.co` |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anonymous/public key | `eyJhbGc...` (long string) |
 
-> **Note**: The app automatically maps `NEXT_PUBLIC_*` variables to `REACT_APP_*` during the build process for Create React App compatibility. You can use either prefix, but `NEXT_PUBLIC_*` is recommended for Vercel deployments.
+> **Note**: The app uses `NEXT_PUBLIC_*` prefixed environment variables (Vercel/Next.js convention).
 
 ## Security Notes
 

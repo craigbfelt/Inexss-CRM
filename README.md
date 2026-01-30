@@ -70,8 +70,8 @@ If you're experiencing "infinite recursion detected in policy for relation 'user
 - **Express Validator** for input validation
 
 ### Frontend
+- **Next.js 16** with App Router
 - **React 18** with Hooks
-- **React Router** for navigation
 - **Framer Motion** for animations
 - **Lucide React** for beautiful icons
 - **Recharts** for data visualization
@@ -131,8 +131,6 @@ For advanced setup and migration details, see [`SUPABASE_MIGRATION.md`](./SUPABA
    Edit `client/.env` and add your Supabase credentials:
    - `NEXT_PUBLIC_SUPABASE_URL`: Your Supabase project URL
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Your Supabase anonymous key
-   
-   > **Note**: For backward compatibility, you can also use `REACT_APP_*` prefixed variables.
 
 4. **Set up Supabase**
    
@@ -144,7 +142,7 @@ For advanced setup and migration details, see [`SUPABASE_MIGRATION.md`](./SUPABA
 
 ```bash
 cd client
-npm start
+npm run dev
 ```
 
 The application will open at `http://localhost:3000` and connect to your Supabase project.
