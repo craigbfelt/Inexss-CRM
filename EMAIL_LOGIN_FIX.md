@@ -49,9 +49,12 @@ Ensure you have properly configured:
    https://your-app.vercel.app/**
    http://localhost:3000/**
    ```
-   - Add **both** production and local development URLs
-   - Site URL (production only) vs Redirect URLs (production + local)
-   - The `**` wildcard is required to allow all paths
+   - Add **both** production and local development URLs to Redirect URLs
+   - The `**` wildcard is required to allow all paths under each URL
+   
+   > **Important Distinction:**
+   > - **Site URL** = Production URL only (used in emails)
+   > - **Redirect URLs** = Production + Local URLs (where app can redirect after auth)
 
 #### Email Templates (Authentication → Email Templates)
 
@@ -189,29 +192,32 @@ If you don't have any users yet and need to create an admin user:
      - `is_active`: `true`
    - Click **Save**
 
-### Option 2: Via SQL Editor
+### Option 2: Via SQL Editor (Advanced)
 
-Run this SQL in Supabase → SQL Editor:
+> **⚠️ Important:** This method only creates the public profile. You **must** create the auth user via the dashboard first (see Option 1).
+
+**Steps:**
+
+1. First, create the auth user via Supabase Dashboard (see Option 1 above)
+2. Copy the user's UUID from the Authentication → Users page
+3. Then run this SQL in Supabase → SQL Editor to create their public profile:
 
 ```sql
--- This will create the public profile only
--- Replace email, password, and name with your values
+-- Creates the public profile for an existing auth user
+-- PREREQUISITE: Auth user must already exist in auth.users table (created via dashboard)
 
--- Note: Creating auth users directly via SQL is not recommended.
--- The auth.users table requires proper password hashing and security.
--- Use the dashboard method (Option 1 above) to create the auth user first.
-
--- After creating user via dashboard, create the public profile:
 INSERT INTO public.users (id, email, name, role, location, is_active)
 VALUES (
-  'UUID-from-auth-users-table',  -- Replace with actual UUID
-  'admin@example.com',            -- Replace with email
-  'Admin User',                   -- Replace with name
-  'admin',
-  'JHB',                          -- Or: Cape Town, Durban, Other
-  true
+  'UUID-from-auth-users-table',  -- Replace with actual UUID from auth.users
+  'admin@example.com',            -- Replace with same email as auth user
+  'Admin User',                   -- Replace with full name
+  'admin',                        -- Role: admin, staff, brand_representative, contractor, or supplier
+  'JHB',                          -- Location: JHB, Cape Town, Durban, or Other
+  true                            -- is_active: true to allow login
 );
 ```
+
+> **Why not create auth users via SQL?** The `auth.users` table requires specific password hashing algorithms and security configurations that are handled automatically by Supabase's authentication API. Creating users via SQL would bypass these security measures.
 
 ## Additional Resources
 

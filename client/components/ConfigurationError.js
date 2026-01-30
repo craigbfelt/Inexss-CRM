@@ -2,17 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-
-// Helper function to detect email provider configuration errors
-const isEmailProviderError = (message) => {
-  if (!message) return false;
-  const lowerMsg = message.toLowerCase();
-  return (
-    lowerMsg.includes('email signups are disabled') ||
-    lowerMsg.includes('email logins are disabled') ||
-    lowerMsg.includes('email authentication is disabled')
-  );
-};
+import { isEmailProviderError } from '../utils/errorHelpers';
 
 const ConfigurationError = ({ message }) => {
   const showEmailProviderHelp = isEmailProviderError(message);

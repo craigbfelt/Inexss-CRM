@@ -2,6 +2,7 @@
 
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { supabase, signIn, signOut, getUserProfile, isSupabaseConfigured } from '../lib/supabase';
+import { getAuthErrorMessage } from '../utils/errorHelpers';
 
 const AuthContext = createContext(null);
 
@@ -126,21 +127,8 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error('Login error:', error);
       
-      // Provide more helpful error messages for common issues
-      let errorMessage = error.message || 'Login failed';
-      
-      // Check for specific Supabase error messages about email authentication
-      // Supabase returns specific messages when auth providers are disabled
-      if (errorMessage.includes('Email signups are disabled') || 
-          errorMessage.includes('Email logins are disabled') ||
-          errorMessage.includes('Email authentication is disabled')) {
-        errorMessage = 'Email login is currently disabled. Please enable the Email authentication provider in your Supabase dashboard (Authentication → Providers → Email). See EMAIL_LOGIN_FIX.md for detailed instructions.';
-      }
-      // Check for invalid credentials
-      else if (errorMessage.toLowerCase().includes('invalid') && 
-               errorMessage.toLowerCase().includes('credentials')) {
-        errorMessage = 'Invalid email or password. Please check your credentials and try again.';
-      }
+      // Use shared utility to get user-friendly error message
+      const errorMessage = getAuthErrorMessage(error);
       
       return { 
         success: false, 
