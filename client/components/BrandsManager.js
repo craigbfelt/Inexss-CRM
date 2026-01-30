@@ -24,7 +24,8 @@ const BrandsManager = ({ user }) => {
     website: '',
     notes: '',
     image_url: '',
-    logo_url: ''
+    logo_url: '',
+    is_active: true
   });
 
   const canEdit = ['admin', 'staff'].includes(user?.role);
@@ -106,7 +107,8 @@ const BrandsManager = ({ user }) => {
       website: brand.website || '',
       notes: brand.notes || '',
       image_url: brand.image_url || '',
-      logo_url: brand.logo_url || ''
+      logo_url: brand.logo_url || '',
+      is_active: brand.is_active !== false // Default to true if undefined
     });
     setShowModal(true);
   };
@@ -134,7 +136,8 @@ const BrandsManager = ({ user }) => {
       website: '',
       notes: '',
       image_url: '',
-      logo_url: ''
+      logo_url: '',
+      is_active: true
     });
   };
 
@@ -306,12 +309,25 @@ const BrandsManager = ({ user }) => {
               )}
 
               <div className="brand-card-header" style={{ marginTop: brand.image_url ? '40px' : '0' }}>
-                <span
-                  className="brand-category-badge"
-                  style={{ background: getCategoryColor(brand.category) }}
-                >
-                  {brand.category || 'Uncategorized'}
-                </span>
+                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                  <span
+                    className="brand-category-badge"
+                    style={{ background: getCategoryColor(brand.category) }}
+                  >
+                    {brand.category || 'Uncategorized'}
+                  </span>
+                  {brand.is_active === false && (
+                    <span
+                      className="brand-category-badge"
+                      style={{ 
+                        background: 'linear-gradient(135deg, #6b7280, #4b5563)',
+                        fontSize: '0.75rem'
+                      }}
+                    >
+                      Inactive
+                    </span>
+                  )}
+                </div>
                 {canEdit && (
                   <div className="brand-actions">
                     <button className="action-btn edit" onClick={() => handleEdit(brand)}>
@@ -521,6 +537,21 @@ const BrandsManager = ({ user }) => {
                     onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                     placeholder="Additional notes and information"
                   />
+                </div>
+
+                <div className="form-group">
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                    <input
+                      type="checkbox"
+                      checked={formData.is_active}
+                      onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
+                      style={{ width: 'auto', cursor: 'pointer' }}
+                    />
+                    <span>Active Brand</span>
+                  </label>
+                  <small style={{ color: 'var(--gray-500)', fontSize: '0.85rem', marginTop: '0.25rem', display: 'block' }}>
+                    Inactive brands are still visible but marked as inactive
+                  </small>
                 </div>
 
                 <div className="modal-actions">
