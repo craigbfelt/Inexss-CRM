@@ -8,38 +8,41 @@ When importing the repository to Vercel, use these settings:
 
 ### Framework Preset
 ```
-Other (or Create React App)
+Next.js
 ```
+**IMPORTANT:** Select "Next.js" as the framework preset.
 
 ### Root Directory
 ```
-./
+client
 ```
-Leave as root - the `vercel.json` handles the client directory
+**CRITICAL:** Set Root Directory to `client` (NOT `./`). This is required for Vercel to detect the Next.js version in the subdirectory and properly build the application.
 
 ### Build & Development Settings
 
-These are configured in `vercel.json` and will be auto-detected:
+These settings are automatically detected when Root Directory is set to `client`:
 
 **Build Command:**
 ```bash
-cd client && npm run build
+npm run build
 ```
-Note: Dependencies are installed separately via the installCommand, so no need to run `npm install` in the build command.
+(Automatically detected from client/package.json)
 
 **Output Directory:**
 ```
-client/build
+.next
 ```
+(Automatically detected for Next.js)
 
 **Install Command:**
 ```bash
-npm install --prefix client
+npm install
 ```
+(Automatically detected)
 
 **Development Command:** (optional)
 ```bash
-cd client && npm start
+npm run dev
 ```
 
 ## Environment Variables
@@ -129,9 +132,9 @@ After importing, verify these settings:
 
 1. Go to **Settings** → **General**
 2. Check:
-   - Framework Preset: Other
-   - Root Directory: ./
-   - Node.js Version: 20.x (required for Supabase packages)
+   - **Framework Preset:** Next.js
+   - **Root Directory:** client (CRITICAL - must be set to "client")
+   - **Node.js Version:** 20.x (required for Supabase packages)
 
 3. Go to **Settings** → **Environment Variables**
 4. Verify both `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` are present

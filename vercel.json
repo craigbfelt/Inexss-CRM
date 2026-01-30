@@ -1,9 +1,12 @@
 {
-  "buildCommand": "cd client && npm run build",
-  "outputDirectory": "client/.next",
-  "installCommand": "npm install --prefix client",
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "comment": "IMPORTANT: This project has a Next.js app in the 'client' subdirectory.",
+  "comment2": "In Vercel Dashboard: Set 'Root Directory' to 'client' for proper Next.js detection.",
+  "comment3": "See VERCEL_CONFIG.md for detailed configuration instructions.",
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
   "framework": "nextjs",
-  "devCommand": "cd client && npm run dev",
+  "devCommand": "npm run dev",
   "build": {
     "env": {
       "NODE_VERSION": "20.x"
