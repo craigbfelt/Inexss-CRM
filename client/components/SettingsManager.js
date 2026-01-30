@@ -32,9 +32,9 @@ const SettingsManager = ({ user }) => {
     monthlyReports: false
   });
 
-  const showMessage = (type, text) => {
+  const showMessage = (type, text, duration = 5000) => {
     setMessage({ type, text });
-    setTimeout(() => setMessage({ type: '', text: '' }), 5000);
+    setTimeout(() => setMessage({ type: '', text: '' }), duration);
   };
 
   const handleProfileUpdate = async (e) => {
@@ -92,7 +92,8 @@ const SettingsManager = ({ user }) => {
         confirmPassword: ''
       });
 
-      showMessage('success', 'Password changed successfully!');
+      // Show success message with longer duration (10 seconds)
+      showMessage('success', 'Password changed successfully! You can now use your new password to log in.', 10000);
     } catch (error) {
       console.error('Failed to change password:', error);
       showMessage('error', error.message || 'Failed to change password');
