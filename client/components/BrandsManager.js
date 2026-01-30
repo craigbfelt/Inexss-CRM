@@ -13,6 +13,7 @@ const BrandsManager = ({ user }) => {
   const [editingBrand, setEditingBrand] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('all');
+  const [imageErrors, setImageErrors] = useState({});
   const [formData, setFormData] = useState({
     name: '',
     category: '',
@@ -27,6 +28,17 @@ const BrandsManager = ({ user }) => {
   });
 
   const canEdit = ['admin', 'staff'].includes(user?.role);
+
+  const handleImageError = (brandId, imageType) => {
+    setImageErrors(prev => ({
+      ...prev,
+      [`${brandId}_${imageType}`]: true
+    }));
+  };
+
+  const hasImageError = (brandId, imageType) => {
+    return imageErrors[`${brandId}_${imageType}`] === true;
+  };
 
   const categories = [
     'Building Products',
@@ -245,40 +257,35 @@ const BrandsManager = ({ user }) => {
               whileHover={{ y: -5 }}
             >
               {/* Brand Image Header */}
-              {brand.image_url && (
-                <div className="brand-image-header" style={{
-                  backgroundImage: `url(${brand.image_url})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  height: '180px',
-                  borderRadius: 'var(--radius-lg) var(--radius-lg) 0 0',
-                  marginBottom: '1rem',
-                  position: 'relative'
-                }}>
+              {brand.image_url && !hasImageError(brand.id, 'image') && (
+                <div 
+                  className="brand-image-header" 
+                  style={{
+                    backgroundImage: `url("${brand.image_url.replace(/"/g, '')}")`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    height: '180px',
+                    borderRadius: 'var(--radius-lg) var(--radius-lg) 0 0',
+                    marginBottom: '1rem',
+                    position: 'relative'
+                  }}
+                >
+                  {/* Preload image to detect errors */}
+                  <img 
+                    src={brand.image_url}
+                    alt=""
+                    style={{ display: 'none' }}
+                    onError={() => handleImageError(brand.id, 'image')}
+                  />
+                  
                   {/* Logo overlay if available */}
-                  {brand.logo_url && (
-                    <div style={{
-                      position: 'absolute',
-                      bottom: '-30px',
-                      left: '20px',
-                      width: '80px',
-                      height: '80px',
-                      background: 'white',
-                      borderRadius: 'var(--radius-lg)',
-                      padding: '10px',
-                      boxShadow: 'var(--shadow-lg)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}>
+                  {brand.logo_url && !hasImageError(brand.id, 'logo') && (
+                    <div className="brand-logo-overlay">
                       <img 
                         src={brand.logo_url} 
                         alt={`${brand.name} logo`}
-                        style={{ 
-                          maxWidth: '100%', 
-                          maxHeight: '100%',
-                          objectFit: 'contain'
-                        }}
+                        className="brand-logo-image"
+                        onError={() => handleImageError(brand.id, 'logo')}
                       />
                     </div>
                   )}
@@ -286,21 +293,14 @@ const BrandsManager = ({ user }) => {
               )}
 
               {/* If no image but logo exists, show logo prominently */}
-              {!brand.image_url && brand.logo_url && (
-                <div style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  padding: '1rem',
-                  marginBottom: '1rem'
-                }}>
+              {(!brand.image_url || hasImageError(brand.id, 'image')) && brand.logo_url && !hasImageError(brand.id, 'logo') && (
+                <div className="brand-logo-standalone">
                   <img 
                     src={brand.logo_url} 
                     alt={`${brand.name} logo`}
-                    style={{ 
-                      maxWidth: '150px',
-                      maxHeight: '80px',
-                      objectFit: 'contain'
-                    }}
+                    className="brand-logo-image"
+                    style={{ maxWidth: '150px', maxHeight: '80px' }}
+                    onError={() => handleImageError(brand.id, 'logo')}
                   />
                 </div>
               )}
@@ -411,7 +411,7 @@ const BrandsManager = ({ user }) => {
                       type="text"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      placeholder="e.g., Trillidor"
+                      placeholder="e.g., Trellidor"
                       required
                     />
                   </div>
@@ -465,6 +465,16 @@ const BrandsManager = ({ user }) => {
                 </div>
 
                 <div className="form-row">
+                  <div className="form-group">
+                    <label>Contact Phone</label>
+                    <input
+                      type="tel"
+                      value={formData.contact_phone}
+                      onChange={(e) => setFormData({ ...formData, contact_phone: e.target.value })}
+                      placeholder="e.g., +27 11 123 4567"
+                    />
+                  </div>
+
                   <div className="form-group">
                     <label>Website</label>
                     <input

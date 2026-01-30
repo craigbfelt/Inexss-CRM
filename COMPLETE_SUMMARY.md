@@ -309,7 +309,7 @@ If you need help:
 
 ## 📝 Credits
 
-Implemented for: **Inexx Specialised Solutions**  
+Implemented for: **Inexss Specialised Solutions**  
 CRM System: **Inexss CRM**  
 Feature: **Brand Cards with Images & Logos**  
 Brands Source: **inexss.co.za**  
