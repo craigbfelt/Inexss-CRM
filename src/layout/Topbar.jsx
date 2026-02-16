@@ -1,6 +1,18 @@
 import { Search, Bell, Menu } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function Topbar({ onMenuClick }) {
+  const { userProfile } = useAuth();
+
+  const getUserInitials = () => {
+    if (!userProfile?.name) return 'U';
+    const names = userProfile.name.split(' ');
+    if (names.length >= 2) {
+      return `${names[0].charAt(0)}${names[1].charAt(0)}`.toUpperCase();
+    }
+    return userProfile.name.charAt(0).toUpperCase();
+  };
+
   return (
     <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 bg-white/60 backdrop-blur-xl border-b border-gray-200/50 px-4 shadow-apple-sm sm:gap-x-6 sm:px-6 lg:px-8">
       {/* Mobile menu button */}
@@ -56,13 +68,15 @@ export default function Topbar({ onMenuClick }) {
             >
               <span className="sr-only">Open user menu</span>
               <div className="h-8 w-8 rounded-full bg-gradient-to-br from-apple-blue to-apple-purple flex items-center justify-center text-white text-sm font-semibold shadow-apple-sm">
-                CF
+                {getUserInitials()}
               </div>
-              <span className="hidden lg:flex lg:items-center">
-                <span className="ml-4 text-sm font-semibold leading-6 text-gray-900" aria-hidden="true">
-                  Craig Felt
+              {userProfile && (
+                <span className="hidden lg:flex lg:items-center">
+                  <span className="ml-4 text-sm font-semibold leading-6 text-gray-900" aria-hidden="true">
+                    {userProfile.name}
+                  </span>
                 </span>
-              </span>
+              )}
             </button>
           </div>
         </div>

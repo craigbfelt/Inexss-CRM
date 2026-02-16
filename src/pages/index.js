@@ -6,3 +6,5 @@ export { default as Tasks } from './Tasks';
 export { default as Events } from './Events';
 export { default as Calendar } from './Calendar';
 export { default as Settings } from './Settings';
+export { default as Login } from './Login';
+export { default as Signup } from './Signup';
