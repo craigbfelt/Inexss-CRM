@@ -10,12 +10,20 @@ export default function Signup() {
   const navigate = useNavigate();
   const { signUp } = useAuth();
   
+  // NOTE: Role selection is available during signup for demo/development purposes.
+  // In production, consider one of these approaches:
+  // 1. Default all signups to ROLES.STAFF, require admin to upgrade roles
+  // 2. Use invitation system where admins pre-assign roles
+  // 3. Implement approval workflow before activating accounts
+  // Remember: Frontend role selection alone is NOT secure. Always verify
+  // permissions using Supabase RLS policies on the database level.
+  
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
     confirmPassword: '',
-    role: ROLES.STAFF,
+    role: ROLES.STAFF, // Default to staff for safety
     location: LOCATIONS.OTHER,
   });
   const [error, setError] = useState('');

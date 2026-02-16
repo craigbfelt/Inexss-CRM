@@ -2,6 +2,11 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks';
 import { Loading } from '../components';
 
+// NOTE: This component provides UI-level route protection only.
+// For true security, always implement Row Level Security (RLS) policies
+// in Supabase to enforce permissions at the database level.
+// Frontend checks can be bypassed, database policies cannot.
+
 export default function ProtectedRoute({ children, allowedRoles = [] }) {
   const { isAuthenticated, loading, userProfile } = useAuth();
   const location = useLocation();

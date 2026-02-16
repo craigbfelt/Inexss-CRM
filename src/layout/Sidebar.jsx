@@ -10,16 +10,16 @@ import {
   Settings,
   LogOut
 } from 'lucide-react';
-import { useAuth, usePermissions } from '../hooks';
+import { useAuth, usePermissions, ROLES } from '../hooks';
 
 const navigation = [
-  { name: 'Dashboard', href: '/', icon: LayoutDashboard, roles: ['admin', 'staff', 'brand_representative', 'contractor', 'supplier'] },
-  { name: 'Contacts', href: '/contacts', icon: Users, roles: ['admin', 'staff'] },
-  { name: 'Leads', href: '/leads', icon: Target, roles: ['admin', 'staff'] },
-  { name: 'Projects', href: '/projects', icon: Briefcase, roles: ['admin', 'staff', 'contractor', 'brand_representative'] },
-  { name: 'Tasks', href: '/tasks', icon: CheckSquare, roles: ['admin', 'staff', 'contractor'] },
-  { name: 'Events', href: '/events', icon: Bell, roles: ['admin', 'staff'] },
-  { name: 'Calendar', href: '/calendar', icon: Calendar, roles: ['admin', 'staff'] },
+  { name: 'Dashboard', href: '/', icon: LayoutDashboard, roles: [ROLES.ADMIN, ROLES.STAFF, ROLES.BRAND_REP, ROLES.CONTRACTOR, ROLES.SUPPLIER] },
+  { name: 'Contacts', href: '/contacts', icon: Users, roles: [ROLES.ADMIN, ROLES.STAFF] },
+  { name: 'Leads', href: '/leads', icon: Target, roles: [ROLES.ADMIN, ROLES.STAFF] },
+  { name: 'Projects', href: '/projects', icon: Briefcase, roles: [ROLES.ADMIN, ROLES.STAFF, ROLES.CONTRACTOR, ROLES.BRAND_REP] },
+  { name: 'Tasks', href: '/tasks', icon: CheckSquare, roles: [ROLES.ADMIN, ROLES.STAFF, ROLES.CONTRACTOR] },
+  { name: 'Events', href: '/events', icon: Bell, roles: [ROLES.ADMIN, ROLES.STAFF] },
+  { name: 'Calendar', href: '/calendar', icon: Calendar, roles: [ROLES.ADMIN, ROLES.STAFF] },
 ];
 
 export default function Sidebar() {
@@ -65,11 +65,11 @@ export default function Sidebar() {
                   {userProfile.name}
                 </p>
                 <p className="text-xs text-gray-500 truncate">
-                  {userProfile.role === 'admin' ? 'Owner' : 
-                   userProfile.role === 'staff' ? `Staff • ${userProfile.location}` :
-                   userProfile.role === 'brand_representative' ? 'Brand Rep' :
-                   userProfile.role === 'contractor' ? 'Architect' :
-                   userProfile.role === 'supplier' ? 'Supplier' : userProfile.role}
+                  {userProfile.role === ROLES.ADMIN ? 'Owner' : 
+                   userProfile.role === ROLES.STAFF ? `Staff • ${userProfile.location}` :
+                   userProfile.role === ROLES.BRAND_REP ? 'Brand Rep' :
+                   userProfile.role === ROLES.CONTRACTOR ? 'Architect' :
+                   userProfile.role === ROLES.SUPPLIER ? 'Supplier' : userProfile.role}
                 </p>
               </div>
             </div>

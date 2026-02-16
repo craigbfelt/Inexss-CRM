@@ -74,7 +74,12 @@ export function AuthProvider({ children }) {
   const signIn = async (credentials) => {
     const { user: signedInUser } = await authService.signIn(credentials);
     if (signedInUser) {
-      await userService.updateLastLogin(signedInUser.id);
+      try {
+        await userService.updateLastLogin(signedInUser.id);
+      } catch (error) {
+        console.error('Failed to update last login timestamp:', error);
+        // Don't block sign in if this fails
+      }
       await fetchUserProfile(signedInUser.id);
     }
     return signedInUser;
