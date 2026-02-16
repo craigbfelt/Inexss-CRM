@@ -10,8 +10,7 @@ import {
   Settings,
   LogOut
 } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
-import { usePermissions } from '../hooks/usePermissions';
+import { useAuth, usePermissions } from '../hooks';
 
 const navigation = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard, roles: ['admin', 'staff', 'brand_representative', 'contractor', 'supplier'] },
