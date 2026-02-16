@@ -1,26 +1,37 @@
-import { useState } from 'react'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { MainLayout } from './layout';
+import { Dashboard, Contacts, Leads, Projects, Tasks, Events, Calendar, Settings } from './pages';
+
+// Create a client
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      retry: 1,
+    },
+  },
+});
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-md">
-        <h1 className="text-4xl font-bold text-gray-800 mb-4">
-          Inexss CRM
-        </h1>
-        <p className="text-gray-600 mb-6">
-          React + Vite + Tailwind CSS
-        </p>
-        <button
-          onClick={() => setCount((count) => count + 1)}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors"
-        >
-          Count is {count}
-        </button>
-      </div>
-    </div>
-  )
+    <QueryClientProvider client={queryClient}>
+      <Router>
+        <Routes>
+          <Route path="/" element={<MainLayout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="contacts" element={<Contacts />} />
+            <Route path="leads" element={<Leads />} />
+            <Route path="projects" element={<Projects />} />
+            <Route path="tasks" element={<Tasks />} />
+            <Route path="events" element={<Events />} />
+            <Route path="calendar" element={<Calendar />} />
+            <Route path="settings" element={<Settings />} />
+          </Route>
+        </Routes>
+      </Router>
+    </QueryClientProvider>
+  );
 }
 
-export default App
+export default App;

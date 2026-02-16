@@ -1,3 +1,8 @@
-// Add your pages here
-// Example:
-// export { default as HomePage } from './HomePage';
+export { default as Dashboard } from './Dashboard';
+export { default as Contacts } from './Contacts';
+export { default as Leads } from './Leads';
+export { default as Projects } from './Projects';
+export { default as Tasks } from './Tasks';
+export { default as Events } from './Events';
+export { default as Calendar } from './Calendar';
+export { default as Settings } from './Settings';
