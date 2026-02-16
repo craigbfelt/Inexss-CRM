@@ -1,5 +1,5 @@
 import { Target } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardContent } from '../components';
+import { Card, CardTitle } from '../components';
 
 export default function Leads() {
   return (

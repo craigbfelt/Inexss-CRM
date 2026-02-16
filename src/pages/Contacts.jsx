@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Search, Mail, Phone, MapPin, Edit2, Trash2 } from 'lucide-react';
+import { Plus, Search, Mail, Phone, Edit2, Trash2 } from 'lucide-react';
 import { Card, Button, Input, Modal, Table, Loading } from '../components';
 import { useContacts, useCreateContact, useUpdateContact, useDeleteContact } from '../hooks/useContacts';
 

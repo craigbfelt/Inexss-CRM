@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { Users, Target, Briefcase, TrendingUp, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '../components';
-import { LineChart, Line, AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const stats = [
   { 
@@ -80,7 +80,7 @@ export default function Dashboard() {
         <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
           Dashboard
         </h1>
-        <p className="mt-2 text-gray-600">Welcome back! Here's what's happening today.</p>
+        <p className="mt-2 text-gray-600">Welcome back! Here&apos;s what&apos;s happening today.</p>
       </div>
 
       {/* Stats Grid */}
