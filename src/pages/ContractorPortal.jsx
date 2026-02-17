@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { UserCog, Users, Shield, Mail, Phone, MapPin, Check, X, Save, AlertCircle } from 'lucide-react';
+import { UserCog, Users, Shield, Mail, MapPin, X, Save, AlertCircle } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '../components';
 import { userService } from '../services';
 import { useAuth, usePermissions, ROLES, LOCATIONS } from '../hooks';

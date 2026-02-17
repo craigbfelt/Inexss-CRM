@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { UserCog, Shield, User, MapPin, AlertCircle, Check, X, Save } from 'lucide-react';
+import { UserCog, Shield, User, MapPin, AlertCircle, X, Save } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '../components';
 import { userService } from '../services';
 import { usePermissions, ROLES, LOCATIONS } from '../hooks';
@@ -62,22 +62,6 @@ export default function UserManagement() {
     }
   };
 
-  const handleToggleActive = async (userId, currentStatus) => {
-    try {
-      const newStatus = !currentStatus;
-      await userService.updateUserProfile(userId, {
-        is_active: newStatus,
-      });
-      
-      // Update local state
-      setUsers(users.map(u => u.id === userId ? { ...u, is_active: newStatus } : u));
-      setError(null);
-    } catch (err) {
-      console.error('Error toggling user status:', err);
-      setError('Failed to update user status. Please try again.');
-    }
-  };
-
   const getRoleBadgeColor = (role) => {
     switch (role) {
       case ROLES.ADMIN:
@@ -119,7 +103,7 @@ export default function UserManagement() {
           <div className="flex flex-col items-center">
             <AlertCircle className="h-12 w-12 text-red-500 mb-4" />
             <h2 className="text-xl font-semibold text-gray-900 mb-2">Access Denied</h2>
-            <p className="text-gray-600">You don't have permission to access this page.</p>
+            <p className="text-gray-600">You don&apos;t have permission to access this page.</p>
           </div>
         </Card>
       </div>
