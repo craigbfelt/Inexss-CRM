@@ -2,6 +2,13 @@
 
 A premium Apple-style CRM system built with React, featuring frosted glass effects, smooth animations, and beautiful gradients.
 
+## 🚀 Quick Setup
+
+**New to this project?** Follow the visual setup guide:
+- **[SETUP_FLOWCHART.md](SETUP_FLOWCHART.md)** - Visual step-by-step setup guide
+- **[QUICK_START.md](QUICK_START.md)** - Get running in 5 minutes
+- **[supabase/SETUP_GUIDE.md](supabase/SETUP_GUIDE.md)** - Complete documentation
+
 ![Dashboard Preview](https://github.com/user-attachments/assets/33155727-6f4d-43d1-8d31-ccba738b6240)
 
 ## ✨ Features
