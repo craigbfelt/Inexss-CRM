@@ -2,6 +2,20 @@
 
 This directory contains the database schema and setup instructions for deploying Inexss CRM to Supabase.
 
+## 🚨 Login/Registration Issues?
+
+**If you're experiencing login or registration problems**, see **[SETUP_GUIDE.md](SETUP_GUIDE.md)** for:
+- Complete troubleshooting steps
+- How to set up the admin user (craig@zerobitone.co.za)
+- Fixing RLS policy errors
+- Resolving signup issues
+
+## Quick Links
+
+- **[SETUP_GUIDE.md](SETUP_GUIDE.md)** - Complete setup and troubleshooting guide (START HERE)
+- **[setup_admin_user.sql](setup_admin_user.sql)** - Script to create admin user
+- **[verify_complete_setup.sql](verify_complete_setup.sql)** - Verify your setup is correct
+
 ## Prerequisites
 
 1. **Supabase Account**: Sign up at [https://supabase.com](https://supabase.com)
