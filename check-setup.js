@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+/* eslint-env node */
+
 /**
  * Supabase Configuration Checker
  * 

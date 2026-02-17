@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 
+/* eslint-env node */
+/* eslint-disable no-unused-vars */
+
 /**
  * Database Migration Script for Inexss CRM
  * 

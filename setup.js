@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+/* eslint-env node */
+
 /**
  * Automated Setup Script for Inexss CRM
  * 
@@ -135,7 +137,7 @@ VITE_SUPABASE_ANON_KEY=${supabaseAnonKey}
       supabase = createClient(supabaseUrl, supabaseAnonKey);
       
       // Test connection
-      const { data, error: testError } = await supabase.from('users').select('count', { count: 'exact', head: true });
+      const { error: testError } = await supabase.from('users').select('count', { count: 'exact', head: true });
       
       if (testError && !testError.message.includes('does not exist')) {
         throw testError;
