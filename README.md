@@ -13,11 +13,16 @@ npm install
 npm run setup
 ```
 
-The setup script will guide you through everything automatically. **See [SETUP.md](SETUP.md) for details.**
+The setup script will guide you through everything automatically. 
 
-### 📚 Other Documentation
+**📖 See [GETTING_STARTED.md](GETTING_STARTED.md) for a complete walkthrough.**
 
-- **[SETUP.md](SETUP.md)** - **START HERE** - Simple unified setup guide (recommended)
+**Or jump straight to [SETUP.md](SETUP.md) for the setup guide.**
+
+### 📚 Documentation
+
+- **[GETTING_STARTED.md](GETTING_STARTED.md)** - **NEW USERS START HERE** - Complete walkthrough
+- **[SETUP.md](SETUP.md)** - Simple unified setup guide
 - **[QUICK_REFERENCE.md](QUICK_REFERENCE.md)** - Quick command reference card
 - **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Common issues and solutions
 - [QUICK_START.md](QUICK_START.md) - Alternative 5-minute guide
