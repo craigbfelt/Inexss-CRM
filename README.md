@@ -4,10 +4,30 @@ A premium Apple-style CRM system built with React, featuring frosted glass effec
 
 ## 🚀 Quick Setup
 
-**New to this project?** Follow the visual setup guide:
-- **[SETUP_FLOWCHART.md](SETUP_FLOWCHART.md)** - Visual step-by-step setup guide
-- **[QUICK_START.md](QUICK_START.md)** - Get running in 5 minutes
-- **[supabase/SETUP_GUIDE.md](supabase/SETUP_GUIDE.md)** - Complete documentation
+**New to this project?** We've made setup super simple!
+
+### ⚡ Automated Setup (Recommended)
+
+```bash
+npm install
+npm run setup
+```
+
+The setup script will guide you through everything automatically. 
+
+**📖 See [GETTING_STARTED.md](GETTING_STARTED.md) for a complete walkthrough.**
+
+**Or jump straight to [SETUP.md](SETUP.md) for the setup guide.**
+
+### 📚 Documentation
+
+- **[GETTING_STARTED.md](GETTING_STARTED.md)** - **NEW USERS START HERE** - Complete walkthrough
+- **[SETUP.md](SETUP.md)** - Simple unified setup guide
+- **[QUICK_REFERENCE.md](QUICK_REFERENCE.md)** - Quick command reference card
+- **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Common issues and solutions
+- [QUICK_START.md](QUICK_START.md) - Alternative 5-minute guide
+- [supabase/SETUP_GUIDE.md](supabase/SETUP_GUIDE.md) - Detailed technical documentation
+- [SETUP_FLOWCHART.md](SETUP_FLOWCHART.md) - Visual flowchart
 
 ![Dashboard Preview](https://github.com/user-attachments/assets/33155727-6f4d-43d1-8d31-ccba738b6240)
 
@@ -79,11 +99,16 @@ A premium Apple-style CRM system built with React, featuring frosted glass effec
 
 ⚠️ **Important**: Before running the application, you must set up Supabase authentication and database.
 
-**👉 See [supabase/SETUP_GUIDE.md](supabase/SETUP_GUIDE.md) for complete setup instructions.**
+**👉 See [SETUP.md](SETUP.md) for the simple automated setup process.**
 
-The setup guide covers:
+Or for manual setup, see the detailed guides:
+- [supabase/SETUP_GUIDE.md](supabase/SETUP_GUIDE.md) for complete setup instructions
+- [QUICK_START.md](QUICK_START.md) for a 5-minute quick start
+
+The setup covers:
 - Creating and configuring Supabase project
-- Setting up database schema and migrations
+- Automated credential configuration
+- Database schema and migrations
 - Creating admin user (craig@zerobitone.co.za)
 - Fixing login and registration issues
 - Troubleshooting common problems
@@ -101,7 +126,22 @@ cd Inexss-CRM
 npm install
 ```
 
-3. Set up environment variables:
+3. **Run automated setup (recommended)**:
+```bash
+npm run setup
+```
+
+This will guide you through:
+- Creating `.env` file with your Supabase credentials
+- Database configuration
+- Admin user creation
+
+**For detailed setup instructions, see [SETUP.md](SETUP.md)**
+
+**Alternative: Manual setup**
+
+If you prefer manual setup:
+
 ```bash
 cp .env.example .env
 ```
@@ -112,7 +152,7 @@ VITE_SUPABASE_URL=your_supabase_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
-**📖 For detailed setup instructions, see [supabase/SETUP_GUIDE.md](supabase/SETUP_GUIDE.md)**
+Then follow the database setup in [supabase/SETUP_GUIDE.md](supabase/SETUP_GUIDE.md)
 
 ### Development
 
