@@ -20,8 +20,12 @@ export default function Contacts() {
     email: '',
     phone: '',
     company: '',
-    position: '',
-    address: '',
+    type: 'Architect',
+    address_street: '',
+    address_city: '',
+    address_province: '',
+    address_postal_code: '',
+    notes: '',
   });
 
   const handleOpenModal = (contact = null) => {
@@ -35,8 +39,12 @@ export default function Contacts() {
         email: '',
         phone: '',
         company: '',
-        position: '',
-        address: '',
+        type: 'Architect',
+        address_street: '',
+        address_city: '',
+        address_province: '',
+        address_postal_code: '',
+        notes: '',
       });
     }
     setIsModalOpen(true);
@@ -50,8 +58,12 @@ export default function Contacts() {
       email: '',
       phone: '',
       company: '',
-      position: '',
-      address: '',
+      type: 'Architect',
+      address_street: '',
+      address_city: '',
+      address_province: '',
+      address_postal_code: '',
+      notes: '',
     });
   };
 
@@ -117,7 +129,7 @@ export default function Contacts() {
           </div>
           <div className="ml-4">
             <div className="font-medium text-gray-900">{contact.name || 'N/A'}</div>
-            <div className="text-gray-500 text-xs">{contact.position || 'N/A'}</div>
+            <div className="text-gray-500 text-xs">{contact.type || 'N/A'}</div>
           </div>
         </div>
       ),
@@ -241,12 +253,11 @@ export default function Contacts() {
             placeholder="john@example.com"
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            required
           />
           <Input
             label="Phone"
             type="tel"
-            placeholder="+1 (555) 123-4567"
+            placeholder="+27 82 123 4567"
             value={formData.phone}
             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
           />
@@ -256,18 +267,59 @@ export default function Contacts() {
             value={formData.company}
             onChange={(e) => setFormData({ ...formData, company: e.target.value })}
           />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Type
+            </label>
+            <select
+              value={formData.type}
+              onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+              className="w-full px-4 py-2 bg-white border border-gray-300 rounded-xl focus:border-apple-blue focus:ring-2 focus:ring-apple-blue/20 focus:outline-none transition-all"
+            >
+              <option value="Architect">Architect</option>
+              <option value="Developer">Developer</option>
+              <option value="Contractor">Contractor</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
           <Input
-            label="Position"
-            placeholder="CEO"
-            value={formData.position}
-            onChange={(e) => setFormData({ ...formData, position: e.target.value })}
+            label="Street Address"
+            placeholder="123 Main St"
+            value={formData.address_street}
+            onChange={(e) => setFormData({ ...formData, address_street: e.target.value })}
           />
+          <div className="grid grid-cols-2 gap-4">
+            <Input
+              label="City"
+              placeholder="Johannesburg"
+              value={formData.address_city}
+              onChange={(e) => setFormData({ ...formData, address_city: e.target.value })}
+            />
+            <Input
+              label="Province"
+              placeholder="Gauteng"
+              value={formData.address_province}
+              onChange={(e) => setFormData({ ...formData, address_province: e.target.value })}
+            />
+          </div>
           <Input
-            label="Address"
-            placeholder="123 Main St, City, State"
-            value={formData.address}
-            onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+            label="Postal Code"
+            placeholder="2000"
+            value={formData.address_postal_code}
+            onChange={(e) => setFormData({ ...formData, address_postal_code: e.target.value })}
           />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Notes
+            </label>
+            <textarea
+              rows="3"
+              placeholder="Additional notes..."
+              value={formData.notes}
+              onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+              className="w-full px-4 py-2 bg-white border border-gray-300 rounded-xl focus:border-apple-blue focus:ring-2 focus:ring-apple-blue/20 focus:outline-none transition-all resize-none"
+            />
+          </div>
           <div className="flex justify-end gap-3 mt-6">
             <Button type="button" variant="secondary" onClick={handleCloseModal}>
               Cancel

@@ -1,8 +1,9 @@
-import { Search, Bell, Menu } from 'lucide-react';
-import { useAuth } from '../hooks';
+import { Search, Bell, Menu, Shield } from 'lucide-react';
+import { useAuth, usePermissions } from '../hooks';
 
 export default function Topbar({ onMenuClick }) {
   const { userProfile } = useAuth();
+  const { isAdmin } = usePermissions();
 
   const getUserInitials = () => {
     if (!userProfile?.name) return 'U';
@@ -75,6 +76,12 @@ export default function Topbar({ onMenuClick }) {
                   <span className="ml-4 text-sm font-semibold leading-6 text-gray-900" aria-hidden="true">
                     {userProfile.name}
                   </span>
+                  {isAdmin() && (
+                    <span className="ml-2 inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-500 px-2 py-1 text-xs font-semibold text-yellow-900 shadow-sm">
+                      <Shield className="h-3 w-3" />
+                      Admin
+                    </span>
+                  )}
                 </span>
               )}
             </button>
