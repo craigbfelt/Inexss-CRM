@@ -2,6 +2,13 @@
 
 A premium Apple-style CRM system built with React, featuring frosted glass effects, smooth animations, and beautiful gradients.
 
+## 🚀 Quick Setup
+
+**New to this project?** Follow the visual setup guide:
+- **[SETUP_FLOWCHART.md](SETUP_FLOWCHART.md)** - Visual step-by-step setup guide
+- **[QUICK_START.md](QUICK_START.md)** - Get running in 5 minutes
+- **[supabase/SETUP_GUIDE.md](supabase/SETUP_GUIDE.md)** - Complete documentation
+
 ![Dashboard Preview](https://github.com/user-attachments/assets/33155727-6f4d-43d1-8d31-ccba738b6240)
 
 ## ✨ Features
@@ -68,6 +75,19 @@ A premium Apple-style CRM system built with React, featuring frosted glass effec
 - npm or yarn
 - A Supabase account and project
 
+### Quick Setup
+
+⚠️ **Important**: Before running the application, you must set up Supabase authentication and database.
+
+**👉 See [supabase/SETUP_GUIDE.md](supabase/SETUP_GUIDE.md) for complete setup instructions.**
+
+The setup guide covers:
+- Creating and configuring Supabase project
+- Setting up database schema and migrations
+- Creating admin user (craig@zerobitone.co.za)
+- Fixing login and registration issues
+- Troubleshooting common problems
+
 ### Installation
 
 1. Clone the repository:
@@ -91,6 +111,8 @@ Edit `.env` and add your Supabase credentials:
 VITE_SUPABASE_URL=your_supabase_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
+
+**📖 For detailed setup instructions, see [supabase/SETUP_GUIDE.md](supabase/SETUP_GUIDE.md)**
 
 ### Development
 
