@@ -4,11 +4,12 @@ import { motion } from 'framer-motion';
 import { LogIn, Mail, Lock, AlertCircle } from 'lucide-react';
 import { useAuth } from '../hooks';
 import { Button, Input, Card } from '../components';
+import { isSupabaseConfigured } from '../lib/supabaseClient';
 
 export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { signIn } = useAuth();
+  const { signIn, configError } = useAuth();
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -60,8 +61,30 @@ export default function Login() {
         </div>
 
         <Card className="p-8">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {error && (
+          {configError && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-6 bg-red-50 border border-red-200 rounded-xl p-4"
+            >
+              <div className="flex items-start gap-3">
+                <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-red-800 mb-2">{configError}</p>
+                  <div className="text-xs text-red-700 space-y-1">
+                    <p>To fix this:</p>
+                    <ol className="list-decimal list-inside space-y-1 ml-2">
+                      <li>Create a <code className="bg-red-100 px-1 rounded">.env</code> file in the project root</li>
+                      <li>Add your Supabase credentials</li>
+                      <li>Restart the development server</li>
+                    </ol>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-6">{error && (
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -112,7 +135,7 @@ export default function Login() {
               type="submit"
               variant="primary"
               className="w-full"
-              disabled={loading}
+              disabled={loading || !isSupabaseConfigured}
             >
               {loading ? (
                 <div className="flex items-center justify-center gap-2">
