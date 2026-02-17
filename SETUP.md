@@ -82,6 +82,10 @@ This will check:
 
 ## 🆘 Troubleshooting
 
+For detailed troubleshooting, see **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)**
+
+### Quick Fixes
+
 ### "Cannot connect to Supabase"
 
 **Solution**: 
@@ -128,7 +132,9 @@ This will check:
 
 ### Still having issues?
 
-Run the verification script for detailed diagnostics:
+**See the complete troubleshooting guide: [TROUBLESHOOTING.md](TROUBLESHOOTING.md)**
+
+Or run the verification script for detailed diagnostics:
 
 ```bash
 npm run verify
