@@ -8,3 +8,4 @@ export { default as Calendar } from './Calendar';
 export { default as Settings } from './Settings';
 export { default as Login } from './Login';
 export { default as Signup } from './Signup';
+export { default as UserManagement } from './UserManagement';

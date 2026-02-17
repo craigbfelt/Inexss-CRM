@@ -8,7 +8,8 @@ import {
   Calendar, 
   Bell,
   Settings,
-  LogOut
+  LogOut,
+  UserCog
 } from 'lucide-react';
 import { useAuth, usePermissions, ROLES } from '../hooks';
 
@@ -20,6 +21,7 @@ const navigation = [
   { name: 'Tasks', href: '/tasks', icon: CheckSquare, roles: [ROLES.ADMIN, ROLES.STAFF, ROLES.CONTRACTOR] },
   { name: 'Events', href: '/events', icon: Bell, roles: [ROLES.ADMIN, ROLES.STAFF] },
   { name: 'Calendar', href: '/calendar', icon: Calendar, roles: [ROLES.ADMIN, ROLES.STAFF] },
+  { name: 'User Management', href: '/users', icon: UserCog, roles: [ROLES.ADMIN] },
 ];
 
 export default function Sidebar() {
