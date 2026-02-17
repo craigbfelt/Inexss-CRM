@@ -9,7 +9,8 @@ import {
   Bell,
   Settings,
   LogOut,
-  UserCog
+  UserCog,
+  Shield
 } from 'lucide-react';
 import { useAuth, usePermissions, ROLES } from '../hooks';
 
@@ -22,6 +23,9 @@ const navigation = [
   { name: 'Events', href: '/events', icon: Bell, roles: [ROLES.ADMIN, ROLES.STAFF] },
   { name: 'Calendar', href: '/calendar', icon: Calendar, roles: [ROLES.ADMIN, ROLES.STAFF] },
   { name: 'User Management', href: '/users', icon: UserCog, roles: [ROLES.ADMIN] },
+  { name: 'Contractor Portal', href: '/contractor-portal', icon: Shield, roles: [ROLES.CONTRACTOR] },
+  { name: 'Brand Portal', href: '/brand-portal', icon: Shield, roles: [ROLES.BRAND_REP] },
+  { name: 'Supplier Portal', href: '/supplier-portal', icon: Shield, roles: [ROLES.SUPPLIER] },
 ];
 
 export default function Sidebar() {
