@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState } from 'react';
 import { authService, userService } from '../services';
+import { isSupabaseConfigured } from '../lib/supabaseClient';
 
 const AuthContext = createContext({});
 
@@ -10,6 +11,7 @@ export function AuthProvider({ children }) {
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [configError, setConfigError] = useState(null);
 
   // Fetch user profile from public.users table
   const fetchUserProfile = async (userId) => {
@@ -26,6 +28,14 @@ export function AuthProvider({ children }) {
   // Initialize auth state
   useEffect(() => {
     const initializeAuth = async () => {
+      // Check if Supabase is configured
+      if (!isSupabaseConfigured) {
+        console.error('Supabase is not configured. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your .env file.');
+        setConfigError('Supabase is not configured. Please check your environment variables.');
+        setLoading(false);
+        return;
+      }
+
       try {
         const session = await authService.getSession();
         if (session?.user) {
@@ -41,6 +51,11 @@ export function AuthProvider({ children }) {
     };
 
     initializeAuth();
+
+    // Only set up auth listener if Supabase is configured
+    if (!isSupabaseConfigured) {
+      return;
+    }
 
     // Listen for auth changes
     const { data: authListener } = authService.onAuthStateChange(
@@ -97,6 +112,7 @@ export function AuthProvider({ children }) {
     userProfile,
     loading,
     isAuthenticated,
+    configError,
     signUp,
     signIn,
     signOut,
