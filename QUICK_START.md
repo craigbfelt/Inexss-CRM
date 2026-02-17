@@ -44,13 +44,19 @@ ON CONFLICT (id) DO UPDATE SET role = 'admin';
 - In Supabase: **Project Settings** > **API**
 - Copy **Project URL** and **anon public** key to `.env`
 
-### 6. Run App
+### 6. Verify Setup (Optional)
 ```bash
 npm install
+npm run check-setup
+```
+This will verify your configuration is correct.
+
+### 7. Run App
+```bash
 npm run dev
 ```
 
-### 7. Test Login
+### 8. Test Login
 - Open http://localhost:3000/login
 - Login with: craig@zerobitone.co.za
 - Use the password you set in step 3
